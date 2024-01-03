@@ -1,24 +1,34 @@
 package org.novi.activations
 
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.novi.core.BaseActivation
 import java.text.SimpleDateFormat
-import java.util.Date
-import com.fasterxml.jackson.module.kotlin.*
+import java.util.*
+
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
-class DateTimeActivation(override var configuration: DateRangeData? = DateRangeData(Date(), Date())) : BaseActivation<DateRangeData> {
+class DateTimeActivation(override var configuration: DateRangeData = DateRangeData(Date(), Date())) :
+    BaseActivation<DateRangeData> {
 
-    val DATE_FORMAT = "dd-MM-yyyy hh:mm"
+    constructor(configStr: String) : this(parseStr(configStr))
 
-    override fun valueOf(configStr: String): BaseActivation<DateRangeData> {
-        val mapper = jacksonObjectMapper()
-        mapper.setDateFormat(SimpleDateFormat(DATE_FORMAT))
-        val dateRange: DateRangeData = if (configStr != null) mapper.readValue(configStr) else DateRangeData(Date(), Date())
-        return DateTimeActivation(dateRange)
+    companion object {
+        private const val DATE_FORMAT = "dd-MM-yyyy hh:mm"
+        val mapper = jacksonObjectMapper().setDateFormat(SimpleDateFormat(DATE_FORMAT))
+        fun parseStr(configStr: String): DateRangeData {
+            return mapper.readValue(configStr) as DateRangeData
+        }
     }
 
     override fun evaluate(context: String): Boolean {
-        TODO("Not yet implemented")
+        val root = mapper.readTree(context)
+        val contextMap = mapper.treeToValue(root, Map::class.java)
+        val df = SimpleDateFormat(DATE_FORMAT)
+        val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
+        return configuration.startDateTime.compareTo(currentDateTime) <= 0 && configuration.endDateTime.compareTo(
+            currentDateTime
+        ) > 0
     }
 }
