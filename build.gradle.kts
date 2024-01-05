@@ -29,6 +29,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    implementation("org.apache.commons:commons-math3:3.6.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -44,4 +46,5 @@ tasks.withType<Test> {
 
 noArg {
     annotation("org.novi.core.NoArg")
+    invokeInitializers = true
 }

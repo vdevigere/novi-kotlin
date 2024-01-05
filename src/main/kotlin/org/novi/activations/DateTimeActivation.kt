@@ -11,9 +11,15 @@ import java.util.*
 
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
-
 @NoArg
-class DateTimeActivation(override var configuration: String, dateFormat: String ="dd-MM-yyyy hh:mm") : BaseActivation<DateRangeData> {
+class DateTimeActivation(override var configuration: String, var dateFormat: String = "dd-MM-yyyy hh:mm") :
+    BaseActivation<DateRangeData> {
+    // Why is the init block needed?
+    // See https://youtrack.jetbrains.com/issue/KT-33502/No-arg-compiler-plugin-property-initializers-defined-in-the-primary-constructor-are-not-called
+    init {
+        dateFormat = "dd-MM-yyyy hh:mm"
+    }
+
     private val simpleDateFormat = SimpleDateFormat(dateFormat)
     private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(simpleDateFormat)
 

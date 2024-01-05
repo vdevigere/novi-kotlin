@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.novi.activations.DateRangeData
 import org.novi.activations.DateTimeActivation
+import org.novi.activations.WeightedRandomActivation
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +23,7 @@ class ServiceLoaderTest {
     fun testServiceLoader() {
         val loader: ServiceLoader<BaseActivation<*>> = ServiceLoader.load(BaseActivation::class.java)
         assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivation::class.java)
+        assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivation::class.java)
         val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
         val mapper = jacksonObjectMapper().setDateFormat(sdf)
         val drd = mapper.readValue<DateRangeData>(config)
