@@ -5,20 +5,22 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.novi.core.BaseActivation
+import org.novi.core.NoArg
 import java.text.SimpleDateFormat
 import java.util.*
 
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
-class DateTimeActivation(override var configuration: String? = "null") : BaseActivation<DateRangeData> {
+@NoArg
+class DateTimeActivation(override var configuration: String) : BaseActivation<DateRangeData> {
 
     companion object {
         private const val DATE_FORMAT = "dd-MM-yyyy hh:mm"
         val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(SimpleDateFormat(DATE_FORMAT))
     }
 
-    override fun valueOf(s: String?): DateRangeData {
-        return if (s != null) mapper.readValue<DateRangeData>(s) else DateRangeData(Date(), Date())
+    override fun valueOf(s: String): DateRangeData {
+        return mapper.readValue<DateRangeData>(s)
     }
 
 
@@ -27,6 +29,6 @@ class DateTimeActivation(override var configuration: String? = "null") : BaseAct
         val contextMap = mapper.treeToValue(root, Map::class.java)
         val df = SimpleDateFormat(DATE_FORMAT)
         val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
-        return parsedConfig?.startDateTime!! <= currentDateTime && parsedConfig?.endDateTime!! > currentDateTime
+        return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
     }
 }

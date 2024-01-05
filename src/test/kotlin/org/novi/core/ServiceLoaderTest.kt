@@ -27,7 +27,7 @@ class ServiceLoaderTest {
         val drd = mapper.readValue<DateRangeData>(config)
         for (activation in loader) {
             if (activation is DateTimeActivation) {
-                assertThat(activation.configuration).isEqualTo("null")
+                assertThat(activation.configuration).isNull()
                 activation.configuration = config.trimIndent()
                 assertThat(activation.parsedConfig).isEqualTo(drd)
             }

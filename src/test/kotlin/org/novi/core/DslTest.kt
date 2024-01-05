@@ -7,15 +7,15 @@ import org.novi.activations.DateTimeActivation
 
 class DslTest {
 
-    class TrueActivation(override var configuration: String?) : BaseActivation<String> {
-        override fun valueOf(s: String?): String = configuration ?: "null"
+    class TrueActivation(override var configuration: String) : BaseActivation<String> {
+        override fun valueOf(s: String): String = configuration
 
         override fun evaluate(context: String): Boolean = true
 
     }
 
-    class FalseActivation(override var configuration: String?) : BaseActivation<String> {
-        override fun valueOf(s: String?): String = configuration ?: "null"
+    class FalseActivation(override var configuration: String) : BaseActivation<String> {
+        override fun valueOf(s: String): String = configuration
 
         override fun evaluate(context: String): Boolean = false
 
