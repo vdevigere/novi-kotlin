@@ -1,15 +1,21 @@
 package org.novi.core
 
 interface BaseActivation<T> {
-    var configuration: T
+
+    var configuration: String?
+
+    val parsedConfig: T?
+        get() = valueOf(configuration)
+
+    fun valueOf(s: String?): T
 
     fun evaluate(context: String): Boolean
 
     infix fun and(that: BaseActivation<*>): BaseActivation<*> =
-        AndActivation(this, that, "( ${this.configuration} & ${that.configuration} )")
+        AndActivation(this, that)
 
     infix fun or(that: BaseActivation<*>): BaseActivation<*> =
-        OrActivation(this, that, "( ${this.configuration} | ${that.configuration} )")
+        OrActivation(this, that)
 
-    operator fun not(): BaseActivation<*> = NotActivation(this, "!(${this.configuration})")
+    operator fun not(): BaseActivation<*> = NotActivation(this)
 }
