@@ -11,9 +11,11 @@ import java.util.*
 
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
+
 @NoArg
-class DateTimeActivation(override var configuration: String, private val dateFormat: String ="dd-MM-yyyy hh:mm") : BaseActivation<DateRangeData> {
-    private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(SimpleDateFormat(dateFormat))
+class DateTimeActivation(override var configuration: String, dateFormat: String ="dd-MM-yyyy hh:mm") : BaseActivation<DateRangeData> {
+    private val simpleDateFormat = SimpleDateFormat(dateFormat)
+    private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(simpleDateFormat)
 
     override fun valueOf(s: String): DateRangeData {
         return mapper.readValue<DateRangeData>(s)
@@ -23,7 +25,7 @@ class DateTimeActivation(override var configuration: String, private val dateFor
     override fun evaluate(context: String): Boolean {
         val root = mapper.readTree(context)
         val contextMap = mapper.treeToValue(root, Map::class.java)
-        val df = SimpleDateFormat(dateFormat)
+        val df = simpleDateFormat
         val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
         return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
     }

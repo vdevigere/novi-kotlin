@@ -58,10 +58,24 @@ class DslTest {
                     "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00"
                 }
                 """
-        val bEval = DateTimeActivation(config) and TrueActivation("True-1")
+                val bEval = DateTimeActivation(config) and TrueActivation("True-1")
         assertThat(bEval.evaluate(context)).isTrue
+    }
 
-        val bEval2 = DateTimeActivation(config) and FalseActivation("False-1")
-        assertThat(bEval2.evaluate(context)).isFalse
+    @Test
+    fun evaluateForDateEqStartDateAltFormat(){
+        val configAltformat = """
+                {
+                    "startDateTime":"12/11/2023 12:00",
+                    "endDateTime":"12/20/2023 12:00"
+                }            
+        """.trimIndent()
+        val contextAltFormat = """
+                {
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "12/15/2023 12:00"
+                }
+                """
+        val bEval2 = DateTimeActivation(configAltformat, "MM/dd/yyyy") and FalseActivation("False-1")
+        assertThat(bEval2.evaluate(contextAltFormat)).isFalse
     }
 }
