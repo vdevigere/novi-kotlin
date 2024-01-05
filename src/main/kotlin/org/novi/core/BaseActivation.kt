@@ -2,12 +2,12 @@ package org.novi.core
 
 interface BaseActivation<T> {
 
-    var configuration: String
+    var configuration: String?
 
-    val parsedConfig: T
+    val parsedConfig: T?
         get() = valueOf(configuration)
 
-    fun valueOf(s: String): T
+    fun valueOf(s: String?): T?
 
     fun evaluate(context: String): Boolean
 

@@ -10,11 +10,11 @@ import org.novi.core.BaseActivation
 import org.novi.core.NoArg
 
 @NoArg
-class WeightedRandomActivation(override var configuration: String) : BaseActivation<List<Pair<String, Double>>> {
-    override fun valueOf(s: String): List<Pair<String, Double>> {
+class WeightedRandomActivation(override var configuration: String?) : BaseActivation<List<Pair<String, Double>>> {
+    override fun valueOf(s: String?): MutableList<Pair<String, Double>>? {
         val mapper = jacksonObjectMapper()
-        val parsedConfig = mapper.readValue<Map<String, Double>>(configuration)
-        return parsedConfig.entries.stream().map { Pair.create(it.key, it.value) }.toList()
+        val parsedConfig = s?.let { mapper.readValue<Map<String, Double>>(it) }
+        return parsedConfig?.entries?.stream()?.map { Pair.create(it.key, it.value) }?.toList()
     }
 
     override fun evaluate(context: String): Boolean {

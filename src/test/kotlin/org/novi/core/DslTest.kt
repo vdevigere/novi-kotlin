@@ -7,15 +7,15 @@ import org.novi.activations.DateTimeActivation
 
 class DslTest {
 
-    class TrueActivation(override var configuration: String) : BaseActivation<String> {
-        override fun valueOf(s: String): String = configuration
+    class TrueActivation(override var configuration: String?) : BaseActivation<String> {
+        override fun valueOf(s: String?): String? = configuration
 
         override fun evaluate(context: String): Boolean = true
 
     }
 
-    class FalseActivation(override var configuration: String) : BaseActivation<String> {
-        override fun valueOf(s: String): String = configuration
+    class FalseActivation(override var configuration: String?) : BaseActivation<String> {
+        override fun valueOf(s: String?): String? = configuration
 
         override fun evaluate(context: String): Boolean = false
 
@@ -75,7 +75,7 @@ class DslTest {
                     "org.novi.activations.DateTimeActivation.currentDateTime": "12/15/2023 12:00"
                 }
                 """
-        val bEval2 = DateTimeActivation(configAltformat, "MM/dd/yyyy") and FalseActivation("False-1")
+        val bEval2 = DateTimeActivation(configAltformat, "MM/dd/yyyy hh:mm") and FalseActivation("False-1")
         assertThat(bEval2.evaluate(contextAltFormat)).isFalse
     }
 }

@@ -12,19 +12,18 @@ import java.util.*
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
 @NoArg
-class DateTimeActivation(override var configuration: String, var dateFormat: String = "dd-MM-yyyy hh:mm") :
+class DateTimeActivation(override var configuration: String?, private var dateFormat: String = "dd-MM-yyyy hh:mm") :
     BaseActivation<DateRangeData> {
-    // Why is the init block needed?
-    // See https://youtrack.jetbrains.com/issue/KT-33502/No-arg-compiler-plugin-property-initializers-defined-in-the-primary-constructor-are-not-called
-    init {
-        dateFormat = "dd-MM-yyyy hh:mm"
+
+    constructor() : this(null) {
+
     }
 
     private val simpleDateFormat = SimpleDateFormat(dateFormat)
     private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(simpleDateFormat)
 
-    override fun valueOf(s: String): DateRangeData {
-        return mapper.readValue<DateRangeData>(s)
+    override fun valueOf(s: String?): DateRangeData? {
+        return s?.let { mapper.readValue<DateRangeData>(it) }
     }
 
 
@@ -33,6 +32,6 @@ class DateTimeActivation(override var configuration: String, var dateFormat: Str
         val contextMap = mapper.treeToValue(root, Map::class.java)
         val df = simpleDateFormat
         val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
-        return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
+        return parsedConfig?.startDateTime!! <= currentDateTime && parsedConfig?.endDateTime!! > currentDateTime
     }
 }

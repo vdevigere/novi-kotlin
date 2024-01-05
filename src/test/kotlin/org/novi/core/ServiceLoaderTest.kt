@@ -28,10 +28,17 @@ class ServiceLoaderTest {
         val mapper = jacksonObjectMapper().setDateFormat(sdf)
         val drd = mapper.readValue<DateRangeData>(config)
         for (activation in loader) {
-            if (activation is DateTimeActivation) {
-                assertThat(activation.configuration).isNull()
-                activation.configuration = config.trimIndent()
-                assertThat(activation.parsedConfig).isEqualTo(drd)
+            when (activation) {
+                is DateTimeActivation -> {
+                    assertThat(activation.configuration).isNull()
+                    activation.configuration = config.trimIndent()
+                    assertThat(activation.parsedConfig).isEqualTo(drd)
+                }
+
+                is WeightedRandomActivation -> {
+                    assertThat(activation.configuration).isNull()
+                    assertThat(activation.parsedConfig).isNull()
+                }
             }
         }
     }
