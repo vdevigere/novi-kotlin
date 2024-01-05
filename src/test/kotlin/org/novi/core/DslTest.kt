@@ -53,13 +53,15 @@ class DslTest {
                     "endDateTime":"20-12-2023 12:00"
                 }
                 """
-        val dta: DateTimeActivation = DateTimeActivation(config)
         val context = """
                 {
-                    "org.novi.activations.DateTimeActivation.currentDateTime": "11-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00"
                 }
                 """
-        val bEval = dta and TrueActivation("True-1")
+        val bEval = DateTimeActivation(config) and TrueActivation("True-1")
         assertThat(bEval.evaluate(context)).isTrue
+
+        val bEval2 = DateTimeActivation(config) and FalseActivation("False-1")
+        assertThat(bEval2.evaluate(context)).isFalse
     }
 }
