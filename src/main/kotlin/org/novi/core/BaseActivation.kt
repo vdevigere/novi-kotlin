@@ -1,5 +1,6 @@
 package org.novi.core
 
+@NoArg
 interface BaseActivation<T> {
 
     var configuration: String?

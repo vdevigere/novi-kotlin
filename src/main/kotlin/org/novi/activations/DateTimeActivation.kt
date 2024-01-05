@@ -11,10 +11,11 @@ import java.util.*
 
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
-@NoArg
 class DateTimeActivation(override var configuration: String?, private var dateFormat: String = "dd-MM-yyyy hh:mm") :
     BaseActivation<DateRangeData> {
 
+     // An explicit no-arg constructor is required despite the annotation @NoArg because of
+    //https://youtrack.jetbrains.com/issue/KT-33502/No-arg-compiler-plugin-property-initializers-defined-in-the-primary-constructor-are-not-called
     constructor() : this(null) {
 
     }
