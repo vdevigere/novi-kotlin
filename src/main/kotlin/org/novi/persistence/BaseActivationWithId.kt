@@ -1,11 +1,12 @@
 package org.novi.persistence
 
 import org.novi.core.AndActivationWithId
-import org.novi.core.BaseActivation
+import org.novi.core.NoArg
 import org.novi.core.NotActivationWithId
 import org.novi.core.OrActivationWithId
 
-abstract class BaseActivationWithId<T : Any>(val id: Long) {
+@NoArg
+abstract class BaseActivationWithId<T : Any>(private val id: Long) {
 
     lateinit var configuration: String
     val parsedConfig: T
@@ -14,7 +15,7 @@ abstract class BaseActivationWithId<T : Any>(val id: Long) {
     abstract fun valueOf(s: String): T
 
     open fun lookup(activationConfigRepository: ActivationConfigRepository): BaseActivationWithId<T> {
-        if(!this::configuration.isInitialized) {
+        if (!this::configuration.isInitialized) {
             val fromDb = activationConfigRepository.findById(this.id)
             if (fromDb.isPresent) {
                 this.configuration = fromDb.get().config
@@ -30,4 +31,5 @@ abstract class BaseActivationWithId<T : Any>(val id: Long) {
     infix fun or(that: BaseActivationWithId<*>): BaseActivationWithId<String> = OrActivationWithId(this, that, id)
 
     operator fun not(): BaseActivationWithId<String> = NotActivationWithId(this, id)
+    fun isConfigurationInitialized() = ::configuration.isInitialized
 }

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.novi.activations.DateTimeActivation
 import org.novi.activations.DateTimeActivationWithId
+import org.novi.activations.WeightedRandomActivationWithId
 import org.novi.persistence.ActivationConfig
 import org.novi.persistence.ActivationConfigRepository
 import org.novi.persistence.BaseActivationWithId
@@ -31,7 +31,7 @@ class DslTestWithId {
     private val mockRepo: ActivationConfigRepository = mock(ActivationConfigRepository::class.java)
 
     @BeforeEach
-    fun init(){
+    fun init() {
         val false1 = mock(ActivationConfig::class.java)
         `when`(false1.config).thenReturn("False-1")
         `when`(mockRepo.findById(1L)).thenReturn(Optional.of(false1))
@@ -45,14 +45,40 @@ class DslTestWithId {
         `when`(mockRepo.findById(3L)).thenReturn(Optional.of(true3))
 
         val dateActivation = mock(ActivationConfig::class.java)
-        `when`(dateActivation.config).thenReturn("""
+        `when`(dateActivation.config).thenReturn(
+            """
                 {
                     "startDateTime":"11-12-2023 12:00",
                     "endDateTime":"20-12-2023 12:00"
                 }
-                """)
+                """
+        )
         `when`(mockRepo.findById(4L)).thenReturn(Optional.of(dateActivation))
+
+        val wrActivation = mock(ActivationConfig::class.java)
+        `when`(wrActivation.config).thenReturn(
+            """
+                {
+                "SampleA":100.0,
+                "SampleB":0,
+                "SampleC":0
+                }
+                """
+        )
+        `when`(mockRepo.findById(5L)).thenReturn(Optional.of(wrActivation))
+
+        val dateActivationAlt = mock(ActivationConfig::class.java)
+        `when`(dateActivationAlt.config).thenReturn(
+            """
+                {
+                    "startDateTime":"12/11/2023 12:00",
+                    "endDateTime":"12/20/2023 12:00"
+                }
+                """
+        )
+        `when`(mockRepo.findById(6L)).thenReturn(Optional.of(dateActivationAlt))
     }
+
     @Test
     fun testEvaluate1() {
         val bEval = FalseActivation(1L) or (FalseActivation(2L) and TrueActivation(3L))
@@ -81,27 +107,29 @@ class DslTestWithId {
     fun evaluateForDateEqStartDate() {
         val context = """
                 {
-                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "15-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "15-12-2023 12:00",
+                    "org.novi.activations.WeightedRandomActivationWithId":{
+                                            "seed": 200,
+                                            "variantToCheck": "SampleA"
+                                        }                    
                 }
                 """
-        val bEval = DateTimeActivationWithId(4L) and TrueActivation(3L)
+        val bEval = DateTimeActivationWithId(4L) and WeightedRandomActivationWithId(5L)
         assertThat(bEval.lookup(mockRepo).evaluate(context)).isTrue
     }
 
-//    @Test
-//    fun evaluateForDateEqStartDateAltFormat() {
-//        val configAltformat = """
-//                {
-//                    "startDateTime":"12/11/2023 12:00",
-//                    "endDateTime":"12/20/2023 12:00"
-//                }
-//        """.trimIndent()
-//        val contextAltFormat = """
-//                {
-//                    "org.novi.activations.DateTimeActivation.currentDateTime": "12/15/2023 12:00"
-//                }
-//                """
-//        val bEval2 = DateTimeActivation(configAltformat, "MM/dd/yyyy hh:mm") and FalseActivation(1L)
-//        assertThat(bEval2.evaluate(contextAltFormat)).isFalse
-//    }
+    @Test
+    fun evaluateForDateEqStartDateAltFormat() {
+        val contextAltFormat = """
+                {
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "12/15/2023 12:00",
+                    "org.novi.activations.WeightedRandomActivationWithId":{
+                                                                "seed": 200,
+                                                                "variantToCheck": "SampleB"
+                                                            }                    
+                }
+                """
+        val bEval2 = DateTimeActivationWithId(6L, "MM/dd/yyyy hh:mm") and WeightedRandomActivationWithId(5L)
+        assertThat(bEval2.lookup(mockRepo).evaluate(contextAltFormat)).isFalse
+    }
 }
