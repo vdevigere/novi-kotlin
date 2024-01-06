@@ -7,7 +7,6 @@ import org.apache.commons.math3.distribution.EnumeratedDistribution
 import org.apache.commons.math3.random.JDKRandomGenerator
 import org.apache.commons.math3.util.Pair
 import org.novi.core.BaseActivation
-import org.novi.core.NoArg
 
 class WeightedRandomActivation(override var configuration: String?) : BaseActivation<List<Pair<String, Double>>> {
     override fun valueOf(s: String?): MutableList<Pair<String, Double>>? {
