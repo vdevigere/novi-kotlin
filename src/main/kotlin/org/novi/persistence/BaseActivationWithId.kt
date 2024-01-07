@@ -11,12 +11,11 @@ import kotlin.reflect.full.createInstance
 @NoArg
 abstract class BaseActivationWithId<T : Any>(
     private var id: Long? = null,
-    configuration: String? = null,
-    parsedConfig: T? = null
+    configStr: String? = null
 ) {
 
     private lateinit var repository: ActivationConfigRepository
-    private var configuration: String? = configuration
+    private var configuration: String? = configStr
         get() = field ?: run {
             val optional = repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
             if (optional.isPresent) {
@@ -25,12 +24,10 @@ abstract class BaseActivationWithId<T : Any>(
             throw IdNotFoundException("$id was not found in the database")
         }
 
-    var parsedConfig: T? = parsedConfig
-        get() = field ?: run {
-            configuration?.let { valueOf(it) }
-                ?: throw ConfigStringNotFoundException("configuration is null or has not been set")
-        }
-        private set
+    val parsedConfig: T by lazy {
+        configuration?.let { valueOf(it) }
+            ?: throw ConfigStringNotFoundException("configuration is null or has not been set")
+    }
 
     abstract fun valueOf(s: String): T
 

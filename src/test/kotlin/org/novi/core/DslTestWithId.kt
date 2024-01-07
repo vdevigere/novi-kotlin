@@ -9,24 +9,10 @@ import org.novi.activations.DateTimeActivationWithId
 import org.novi.activations.WeightedRandomActivationWithId
 import org.novi.persistence.ActivationConfig
 import org.novi.persistence.ActivationConfigRepository
-import org.novi.persistence.BaseActivationWithId
 import java.util.*
 
 
 class DslTestWithId {
-
-    class TrueActivation(id: Long) : BaseActivationWithId<String>(id) {
-        override fun valueOf(s: String): String = s
-
-        override fun evaluate(context: String): Boolean = true
-
-    }
-
-    class FalseActivation(id: Long) : BaseActivationWithId<String>(id) {
-        override fun valueOf(s: String): String = s
-        override fun evaluate(context: String): Boolean = false
-
-    }
 
     private val mockRepo: ActivationConfigRepository = mock(ActivationConfigRepository::class.java)
 

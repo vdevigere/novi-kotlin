@@ -10,10 +10,9 @@ import org.novi.persistence.BaseActivationWithId
 
 class WeightedRandomActivationWithId(
     id: Long? = null,
-    configuration: String? = null,
-    parsedConfig: List<Pair<String, Double>>? = null
+    configStr: String? = null
 ) :
-    BaseActivationWithId<List<Pair<String, Double>>>(id, configuration, parsedConfig) {
+    BaseActivationWithId<List<Pair<String, Double>>>(id, configStr) {
 
     override fun valueOf(s: String): List<Pair<String, Double>> {
         val mapper = jacksonObjectMapper()
