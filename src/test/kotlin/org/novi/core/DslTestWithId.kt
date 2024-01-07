@@ -129,7 +129,8 @@ class DslTestWithId {
                                                             }                    
                 }
                 """
-        val bEval2 = DateTimeActivationWithId(6L, dateFormat = "MM/dd/yyyy hh:mm") and WeightedRandomActivationWithId(5L)
+        val bEval2 =
+            DateTimeActivationWithId(6L, dateFormat = "MM/dd/yyyy hh:mm") and WeightedRandomActivationWithId(5L)
         assertThat(bEval2.setActivationConfigRepository(mockRepo).evaluate(contextAltFormat)).isFalse
     }
 }

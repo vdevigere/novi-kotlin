@@ -27,7 +27,7 @@ class DslTest {
         false2!!.withConfiguration("False-2")
 
         val true1 = REGISTRY[TrueActivation::class]
-        true1!!.withConfiguration( "True-1")
+        true1!!.withConfiguration("True-1")
         val bEval = false1 or (false2 and true1)
         assertThat(bEval.evaluate("Hello")).isFalse()
     }

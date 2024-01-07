@@ -10,7 +10,12 @@ import java.util.*
 
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
-class DateTimeActivationWithId(id: Long?=null, configuration: String?=null, parsedConfig: DateRangeData?=null, dateFormat: String = "dd-MM-yyyy hh:mm") :
+class DateTimeActivationWithId(
+    id: Long? = null,
+    configuration: String? = null,
+    parsedConfig: DateRangeData? = null,
+    dateFormat: String = "dd-MM-yyyy hh:mm"
+) :
     BaseActivationWithId<DateRangeData>(id, configuration, parsedConfig) {
 
     // An explicit no-arg constructor is required despite the annotation @NoArg because of

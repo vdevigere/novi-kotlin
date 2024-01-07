@@ -9,22 +9,24 @@ import org.novi.exceptions.IdNotFoundException
 import kotlin.reflect.full.createInstance
 
 @NoArg
-abstract class BaseActivationWithId<T : Any>(private var id: Long? = null, configuration: String? = null, parsedConfig: T? = null) {
+abstract class BaseActivationWithId<T : Any>(
+    private var id: Long? = null,
+    configuration: String? = null,
+    parsedConfig: T? = null
+) {
 
     private lateinit var repository: ActivationConfigRepository
     private var configuration: String? = configuration
-        private set
-        get() = field?:run{
-                val optional = repository.findById(id?:throw IdNotFoundException("Id has not been set"))
-                if(optional.isPresent){
-                    field= optional.get().config
-                    return field
-                }
-                throw IdNotFoundException("$id was not found in the database")
+        get() = field ?: run {
+            val optional = repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
+            if (optional.isPresent) {
+                return optional.get().config
+            }
+            throw IdNotFoundException("$id was not found in the database")
         }
 
     var parsedConfig: T? = parsedConfig
-        get() = field?: run{
+        get() = field ?: run {
             configuration?.let { valueOf(it) }
                 ?: throw ConfigStringNotFoundException("configuration is null or has not been set")
         }
@@ -32,12 +34,12 @@ abstract class BaseActivationWithId<T : Any>(private var id: Long? = null, confi
 
     abstract fun valueOf(s: String): T
 
-    open fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivationWithId<T>{
+    open fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivationWithId<T> {
         this.repository = repository
         return this
     }
 
-    open fun withConfiguration(configuration: String): BaseActivationWithId<T>{
+    open fun withConfiguration(configuration: String): BaseActivationWithId<T> {
         val newInstance: BaseActivationWithId<T> = this::class.createInstance()
         newInstance.configuration = configuration
         return newInstance
