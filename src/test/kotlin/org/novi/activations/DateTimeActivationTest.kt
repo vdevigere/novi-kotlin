@@ -7,7 +7,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateInBetween() {
-        val dta = DateTimeActivation(
+        val dta = DateTimeActivationWithId(configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -18,7 +18,7 @@ class DateTimeActivationTest {
         val result: Boolean = dta.evaluate(
             """
                 {
-                    "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "15-12-2023 12:00"
                 }
                 """
         )
@@ -27,7 +27,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateEqStartDate() {
-        val dta: DateTimeActivation = DateTimeActivation(
+        val dta = DateTimeActivationWithId(configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -38,7 +38,7 @@ class DateTimeActivationTest {
         val result: Boolean = dta.evaluate(
             """
                 {
-                    "org.novi.activations.DateTimeActivation.currentDateTime": "11-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "11-12-2023 12:00"
                 }
                 """
         )
@@ -47,7 +47,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateEqEndDate() {
-        val dta: DateTimeActivation = DateTimeActivation(
+        val dta = DateTimeActivationWithId(configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -58,7 +58,7 @@ class DateTimeActivationTest {
         val result: Boolean = dta.evaluate(
             """
                 {
-                    "org.novi.activations.DateTimeActivation.currentDateTime": "20-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "20-12-2023 12:00"
                 }
                 """
         )
@@ -67,7 +67,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateGtEndDate() {
-        val dta: DateTimeActivation = DateTimeActivation(
+        val dta = DateTimeActivationWithId(configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -78,7 +78,7 @@ class DateTimeActivationTest {
         val result: Boolean = dta.evaluate(
             """
                 {
-                    "org.novi.activations.DateTimeActivation.currentDateTime": "25-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "25-12-2023 12:00"
                 }
                 """
         )
@@ -87,7 +87,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateLtStartDate() {
-        val dta: DateTimeActivation = DateTimeActivation(
+        val dta = DateTimeActivationWithId(configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -98,7 +98,7 @@ class DateTimeActivationTest {
         val result: Boolean = dta.evaluate(
             """
                 {
-                    "org.novi.activations.DateTimeActivation.currentDateTime": "05-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "05-12-2023 12:00"
                 }
                 """
         )

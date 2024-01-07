@@ -82,25 +82,25 @@ class DslTestWithId {
     @Test
     fun testEvaluate1() {
         val bEval = FalseActivation(1L) or (FalseActivation(2L) and TrueActivation(3L))
-        assertThat(bEval.lookup(mockRepo).evaluate("Hello")).isFalse()
+        assertThat(bEval.setActivationConfigRepository(mockRepo).evaluate("Hello")).isFalse()
     }
 
     @Test
     fun testEvaluate2() {
         val bEval = FalseActivation(1L) and FalseActivation(2L) or TrueActivation(3L)
-        assertThat(bEval.lookup(mockRepo).evaluate("World")).isTrue()
+        assertThat(bEval.setActivationConfigRepository(mockRepo).evaluate("World")).isTrue()
     }
 
     @Test
     fun testEvaluate3() {
         val bEval = FalseActivation(1L) and (FalseActivation(2L) or TrueActivation(3L))
-        assertThat(bEval.lookup(mockRepo).evaluate("World")).isFalse()
+        assertThat(bEval.setActivationConfigRepository(mockRepo).evaluate("World")).isFalse()
     }
 
     @Test
     fun testEvaluate4() {
         val bEval = !FalseActivation(1L) and (FalseActivation(2L) or TrueActivation(3L))
-        assertThat(bEval.lookup(mockRepo).evaluate("World")).isTrue()
+        assertThat(bEval.setActivationConfigRepository(mockRepo).evaluate("World")).isTrue()
     }
 
     @Test
@@ -115,7 +115,7 @@ class DslTestWithId {
                 }
                 """
         val bEval = DateTimeActivationWithId(4L) and WeightedRandomActivationWithId(5L)
-        assertThat(bEval.lookup(mockRepo).evaluate(context)).isTrue
+        assertThat(bEval.setActivationConfigRepository(mockRepo).evaluate(context)).isTrue
     }
 
     @Test
@@ -129,7 +129,7 @@ class DslTestWithId {
                                                             }                    
                 }
                 """
-        val bEval2 = DateTimeActivationWithId(6L, "MM/dd/yyyy hh:mm") and WeightedRandomActivationWithId(5L)
-        assertThat(bEval2.lookup(mockRepo).evaluate(contextAltFormat)).isFalse
+        val bEval2 = DateTimeActivationWithId(6L, dateFormat = "MM/dd/yyyy hh:mm") and WeightedRandomActivationWithId(5L)
+        assertThat(bEval2.setActivationConfigRepository(mockRepo).evaluate(contextAltFormat)).isFalse
     }
 }

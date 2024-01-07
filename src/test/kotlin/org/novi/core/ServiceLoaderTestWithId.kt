@@ -38,18 +38,17 @@ class ServiceLoaderTestWithId {
         for (activation in loader) {
             when (activation) {
                 is DateTimeActivationWithId -> {
-                    Assertions.assertThat(activation.isConfigurationInitialized()).isFalse
-                    activation.configuration = config.trimIndent()
+//                    Assertions.assertThat(activation.configuration).isNull()
                     val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
                     val mapper = jacksonObjectMapper().setDateFormat(sdf)
                     val drd = mapper.readValue<DateRangeData>(config)
-                    Assertions.assertThat(activation.parsedConfig).isEqualTo(drd)
+                    Assertions.assertThat(activation.withConfiguration(config).parsedConfig).isEqualTo(drd)
                 }
 
                 is WeightedRandomActivationWithId -> {
-                    Assertions.assertThat(activation.isConfigurationInitialized()).isFalse
-                    activation.configuration = wrConfig.trimIndent()
-                    Assertions.assertThat(activation.parsedConfig).isEqualTo(activation.valueOf(wrConfig))
+//                    Assertions.assertThat(activation.configuration).isNull()
+                    val newInstance = activation.withConfiguration(wrConfig.trimIndent())
+                    Assertions.assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
                 }
             }
         }

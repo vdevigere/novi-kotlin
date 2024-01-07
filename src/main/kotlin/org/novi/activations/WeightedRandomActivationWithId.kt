@@ -8,8 +8,8 @@ import org.apache.commons.math3.random.JDKRandomGenerator
 import org.apache.commons.math3.util.Pair
 import org.novi.persistence.BaseActivationWithId
 
-class WeightedRandomActivationWithId(id: Long) :
-    BaseActivationWithId<List<Pair<String, Double>>>(id) {
+class WeightedRandomActivationWithId(id: Long?= null, configuration:String? = null, parsedConfig:List<Pair<String, Double>>? = null) :
+    BaseActivationWithId<List<Pair<String, Double>>>(id, configuration, parsedConfig) {
 
     override fun valueOf(s: String): List<Pair<String, Double>> {
         val mapper = jacksonObjectMapper()
