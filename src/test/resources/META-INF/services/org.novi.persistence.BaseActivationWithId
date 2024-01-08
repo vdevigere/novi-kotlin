@@ -1,4 +1,0 @@
-org.novi.activations.DateTimeActivationWithId
-org.novi.activations.WeightedRandomActivationWithId
-org.novi.core.TrueActivation
-org.novi.core.FalseActivation

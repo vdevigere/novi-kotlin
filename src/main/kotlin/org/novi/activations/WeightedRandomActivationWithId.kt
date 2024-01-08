@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.apache.commons.math3.distribution.EnumeratedDistribution
 import org.apache.commons.math3.random.JDKRandomGenerator
 import org.apache.commons.math3.util.Pair
+import org.novi.core.ActivationFactory
 import org.novi.persistence.BaseActivationWithId
 
 class WeightedRandomActivationWithId(
@@ -31,4 +32,11 @@ class WeightedRandomActivationWithId(
         val ed = EnumeratedDistribution(rnd, this.parsedConfig)
         return ed.sample() == variantToCheck
     }
+}
+
+class WeightedRandomActivationFactory: ActivationFactory{
+    override fun withConfiguration(configuration: String): BaseActivationWithId<*> {
+        return WeightedRandomActivationWithId(configStr = configuration)
+    }
+
 }

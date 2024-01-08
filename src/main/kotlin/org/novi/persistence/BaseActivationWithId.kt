@@ -36,12 +36,6 @@ abstract class BaseActivationWithId<T : Any>(
         return this
     }
 
-    open fun withConfiguration(configuration: String): BaseActivationWithId<T> {
-        val newInstance: BaseActivationWithId<T> = this::class.createInstance()
-        newInstance.configuration = configuration
-        return newInstance
-    }
-
     abstract fun evaluate(context: String): Boolean
 
     infix fun and(that: BaseActivationWithId<*>): BaseActivationWithId<String> = AndActivationWithId(this, that, id)

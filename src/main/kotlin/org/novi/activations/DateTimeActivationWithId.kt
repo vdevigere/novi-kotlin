@@ -4,6 +4,7 @@ package org.novi.activations
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.novi.core.ActivationFactory
 import org.novi.persistence.BaseActivationWithId
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,4 +35,11 @@ class DateTimeActivationWithId(
         val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
         return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
     }
+}
+
+class DateTimeActivationFactory : ActivationFactory{
+    override fun withConfiguration(configuration: String): BaseActivationWithId<*> {
+        return DateTimeActivationWithId(configStr = configuration)
+    }
+
 }
