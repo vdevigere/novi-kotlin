@@ -1,15 +1,14 @@
 package org.novi.persistence
 
-import org.novi.core.AndActivationWithId
+import org.novi.core.AndActivation
 import org.novi.core.NoArg
-import org.novi.core.NotActivationWithId
-import org.novi.core.OrActivationWithId
+import org.novi.core.NotActivation
+import org.novi.core.OrActivation
 import org.novi.exceptions.ConfigStringNotFoundException
 import org.novi.exceptions.IdNotFoundException
-import kotlin.reflect.full.createInstance
 
 @NoArg
-abstract class BaseActivationWithId<T : Any>(
+abstract class BaseActivation<T : Any>(
     private var id: Long? = null,
     configStr: String? = null
 ) {
@@ -31,16 +30,16 @@ abstract class BaseActivationWithId<T : Any>(
 
     abstract fun valueOf(s: String): T
 
-    open fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivationWithId<T> {
+    open fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<T> {
         this.repository = repository
         return this
     }
 
     abstract fun evaluate(context: String): Boolean
 
-    infix fun and(that: BaseActivationWithId<*>): BaseActivationWithId<String> = AndActivationWithId(this, that, id)
+    infix fun and(that: BaseActivation<*>): BaseActivation<String> = AndActivation(this, that, id)
 
-    infix fun or(that: BaseActivationWithId<*>): BaseActivationWithId<String> = OrActivationWithId(this, that, id)
+    infix fun or(that: BaseActivation<*>): BaseActivation<String> = OrActivation(this, that, id)
 
-    operator fun not(): BaseActivationWithId<String> = NotActivationWithId(this, id)
+    operator fun not(): BaseActivation<String> = NotActivation(this, id)
 }

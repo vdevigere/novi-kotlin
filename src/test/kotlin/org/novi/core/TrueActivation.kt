@@ -1,8 +1,8 @@
 package org.novi.core
 
-import org.novi.persistence.BaseActivationWithId
+import org.novi.persistence.BaseActivation
 
-class TrueActivation(id: Long?=null, configStr: String? = null) : BaseActivationWithId<String>(id, configStr) {
+class TrueActivation(id: Long?=null, configStr: String? = null) : BaseActivation<String>(id, configStr) {
     override fun valueOf(s: String): String = s
 
     override fun evaluate(context: String): Boolean = true

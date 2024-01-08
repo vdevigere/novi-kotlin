@@ -5,18 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.novi.core.ActivationFactory
-import org.novi.persistence.BaseActivationWithId
+import org.novi.persistence.BaseActivation
 import java.text.SimpleDateFormat
 import java.util.*
 
 data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
-class DateTimeActivationWithId(
+class DateTimeActivation(
     id: Long? = null,
     configStr: String? = null,
     dateFormat: String = "dd-MM-yyyy hh:mm"
 ) :
-    BaseActivationWithId<DateRangeData>(id, configStr) {
+    BaseActivation<DateRangeData>(id, configStr) {
 
     // An explicit no-arg constructor is required despite the annotation @NoArg because of
     //https://youtrack.jetbrains.com/issue/KT-33502/No-arg-compiler-plugin-property-initializers-defined-in-the-primary-constructor-are-not-called
@@ -38,8 +38,8 @@ class DateTimeActivationWithId(
 }
 
 class DateTimeActivationFactory : ActivationFactory{
-    override fun withConfiguration(configuration: String): BaseActivationWithId<*> {
-        return DateTimeActivationWithId(configStr = configuration)
+    override fun withConfiguration(configuration: String): BaseActivation<*> {
+        return DateTimeActivation(configStr = configuration)
     }
 
 }

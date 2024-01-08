@@ -2,9 +2,7 @@ package org.novi.core
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.novi.activations.DateTimeActivationWithId
-import java.util.*
-import kotlin.reflect.KClass
+import org.novi.activations.DateTimeActivation
 
 
 class DslTest {
@@ -37,10 +35,10 @@ class DslTest {
                 """
         val context = """
                 {
-                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "15-12-2023 12:00"
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00"
                 }
                 """
-        val bEval = DateTimeActivationWithId(configStr = config) and TrueActivation(configStr = "True-1")
+        val bEval = DateTimeActivation(configStr = config) and TrueActivation(configStr = "True-1")
         assertThat(bEval.evaluate(context)).isTrue
     }
 
@@ -54,10 +52,10 @@ class DslTest {
         """.trimIndent()
         val contextAltFormat = """
                 {
-                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "12/15/2023 12:00"
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "12/15/2023 12:00"
                 }
                 """
-        val bEval2 = DateTimeActivationWithId(configStr = configAltformat, dateFormat = "MM/dd/yyyy hh:mm") and FalseActivation(configStr = "False-1")
+        val bEval2 = DateTimeActivation(configStr = configAltformat, dateFormat = "MM/dd/yyyy hh:mm") and FalseActivation(configStr = "False-1")
         assertThat(bEval2.evaluate(contextAltFormat)).isFalse
     }
 }

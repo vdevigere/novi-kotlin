@@ -15,7 +15,7 @@ class WeightedRandomActivationTest {
                 "SampleC":25.0
                 }
                 """
-        val wra = WeightedRandomActivationWithId(configStr = config)
+        val wra = WeightedRandomActivation(configStr = config)
         assertThat(wra.parsedConfig).contains(
             Pair.create("SampleA", 50.0),
             Pair.create("SampleB", 25.0),
@@ -36,13 +36,13 @@ class WeightedRandomActivationTest {
         val context =
             """
                 {
-                    "org.novi.activations.WeightedRandomActivationWithId":{
+                    "org.novi.activations.WeightedRandomActivation":{
                         "seed": 200,
                         "variantToCheck": "SampleA"
                     }
                 }
                 """
-        val wra = WeightedRandomActivationWithId(configStr = config)
+        val wra = WeightedRandomActivation(configStr = config)
         assertThat(wra.evaluate(context)).isTrue
     }
 
@@ -59,13 +59,13 @@ class WeightedRandomActivationTest {
         val context =
             """
                 {
-                    "org.novi.activations.WeightedRandomActivationWithId":{
+                    "org.novi.activations.WeightedRandomActivation":{
                         "seed": 200,
                         "variantToCheck": "SampleA"
                     }
                 }
                 """
-        val wra = WeightedRandomActivationWithId(configStr = config)
+        val wra = WeightedRandomActivation(configStr = config)
         assertThat(wra.evaluate(context)).isFalse
     }
 }

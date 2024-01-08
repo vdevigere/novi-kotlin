@@ -34,7 +34,7 @@ class ServiceLoaderTestWithId {
         for (factory in loader){
             when(factory){
                 is DateTimeActivationFactory ->{
-                    val dta: DateTimeActivationWithId = factory.withConfiguration(dtaConfig) as DateTimeActivationWithId
+                    val dta: DateTimeActivation = factory.withConfiguration(dtaConfig) as DateTimeActivation
                     val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
                     val mapper = jacksonObjectMapper().setDateFormat(sdf)
                     val drd = mapper.readValue<DateRangeData>(dtaConfig)

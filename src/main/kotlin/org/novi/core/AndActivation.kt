@@ -1,15 +1,15 @@
 package org.novi.core
 
 import org.novi.persistence.ActivationConfigRepository
-import org.novi.persistence.BaseActivationWithId
+import org.novi.persistence.BaseActivation
 
-class AndActivationWithId(
-    private val op1: BaseActivationWithId<*>,
-    private val op2: BaseActivationWithId<*>,
+class AndActivation(
+    private val op1: BaseActivation<*>,
+    private val op2: BaseActivation<*>,
     id: Long?
-) : BaseActivationWithId<String>(id) {
+) : BaseActivation<String>(id) {
     override fun valueOf(s: String): String = "( ${op1.parsedConfig} & ${op2.parsedConfig} )"
-    override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivationWithId<String> {
+    override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<String> {
         op1.setActivationConfigRepository(repository)
         op2.setActivationConfigRepository(repository)
         return super.setActivationConfigRepository(repository)

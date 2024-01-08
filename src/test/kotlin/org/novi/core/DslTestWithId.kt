@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.novi.activations.DateTimeActivationWithId
-import org.novi.activations.WeightedRandomActivationWithId
+import org.novi.activations.DateTimeActivation
+import org.novi.activations.WeightedRandomActivation
 import org.novi.persistence.ActivationConfig
 import org.novi.persistence.ActivationConfigRepository
 import java.util.*
@@ -93,14 +93,14 @@ class DslTestWithId {
     fun evaluateForDateEqStartDate() {
         val context = """
                 {
-                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "15-12-2023 12:00",
-                    "org.novi.activations.WeightedRandomActivationWithId":{
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00",
+                    "org.novi.activations.WeightedRandomActivation":{
                                             "seed": 200,
                                             "variantToCheck": "SampleA"
                                         }                    
                 }
                 """
-        val bEval = DateTimeActivationWithId(4L) and WeightedRandomActivationWithId(5L)
+        val bEval = DateTimeActivation(4L) and WeightedRandomActivation(5L)
         assertThat(bEval.setActivationConfigRepository(mockRepo).evaluate(context)).isTrue
     }
 
@@ -108,15 +108,15 @@ class DslTestWithId {
     fun evaluateForDateEqStartDateAltFormat() {
         val contextAltFormat = """
                 {
-                    "org.novi.activations.DateTimeActivationWithId.currentDateTime": "12/15/2023 12:00",
-                    "org.novi.activations.WeightedRandomActivationWithId":{
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "12/15/2023 12:00",
+                    "org.novi.activations.WeightedRandomActivation":{
                                                                 "seed": 200,
                                                                 "variantToCheck": "SampleB"
                                                             }                    
                 }
                 """
         val bEval2 =
-            DateTimeActivationWithId(6L, dateFormat = "MM/dd/yyyy hh:mm") and WeightedRandomActivationWithId(5L)
+            DateTimeActivation(6L, dateFormat = "MM/dd/yyyy hh:mm") and WeightedRandomActivation(5L)
         assertThat(bEval2.setActivationConfigRepository(mockRepo).evaluate(contextAltFormat)).isFalse
     }
 }
