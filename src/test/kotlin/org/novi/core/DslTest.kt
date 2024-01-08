@@ -9,19 +9,27 @@ class DslTest {
 
     @Test
     fun testEvaluate2() {
-        val bEval = FalseActivation(configStr = "False-1") and FalseActivation(configStr = "False-2") or TrueActivation(configStr = "True-3")
+        val bEval = FalseActivation(configStr = "False-1") and FalseActivation(configStr = "False-2") or TrueActivation(
+            configStr = "True-3"
+        )
         assertThat(bEval.evaluate("World")).isTrue()
     }
 
     @Test
     fun testEvaluate3() {
-        val bEval = FalseActivation(configStr = "False-1") and (FalseActivation(configStr = "False-2") or TrueActivation(configStr = "True-3"))
+        val bEval =
+            FalseActivation(configStr = "False-1") and (FalseActivation(configStr = "False-2") or TrueActivation(
+                configStr = "True-3"
+            ))
         assertThat(bEval.evaluate("World")).isFalse()
     }
 
     @Test
     fun testEvaluate4() {
-        val bEval = !FalseActivation(configStr = "False-1") and (FalseActivation(configStr = "False-2") or TrueActivation(configStr = "True-3"))
+        val bEval =
+            !FalseActivation(configStr = "False-1") and (FalseActivation(configStr = "False-2") or TrueActivation(
+                configStr = "True-3"
+            ))
         assertThat(bEval.evaluate("World")).isTrue()
     }
 
@@ -55,7 +63,10 @@ class DslTest {
                     "org.novi.activations.DateTimeActivation.currentDateTime": "12/15/2023 12:00"
                 }
                 """
-        val bEval2 = DateTimeActivation(configStr = configAltformat, dateFormat = "MM/dd/yyyy hh:mm") and FalseActivation(configStr = "False-1")
+        val bEval2 =
+            DateTimeActivation(configStr = configAltformat, dateFormat = "MM/dd/yyyy hh:mm") and FalseActivation(
+                configStr = "False-1"
+            )
         assertThat(bEval2.evaluate(contextAltFormat)).isFalse
     }
 }

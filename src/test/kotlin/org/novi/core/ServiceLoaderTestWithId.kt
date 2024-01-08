@@ -4,7 +4,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.novi.activations.*
+import org.novi.activations.DateRangeData
+import org.novi.activations.DateTimeActivation
+import org.novi.activations.DateTimeActivationFactory
+import org.novi.activations.WeightedRandomActivationFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,18 +30,20 @@ class ServiceLoaderTestWithId {
     }
 
     @Test
-    fun testServiceLoaderFactory(){
+    fun testServiceLoaderFactory() {
         val loader = ServiceLoader.load(ActivationFactory::class.java)
         Assertions.assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivationFactory::class.java)
         Assertions.assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivationFactory::class.java)
-        for (factory in loader){
-            when(factory){
-                is DateTimeActivationFactory ->{
+        for (factory in loader) {
+            when (factory) {
+                is DateTimeActivationFactory -> {
                     val dta: DateTimeActivation = factory.withConfiguration(dtaConfig) as DateTimeActivation
                     val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
                     val mapper = jacksonObjectMapper().setDateFormat(sdf)
                     val drd = mapper.readValue<DateRangeData>(dtaConfig)
-                    Assertions.assertThat(dta.parsedConfig).isEqualTo(drd)                }
+                    Assertions.assertThat(dta.parsedConfig).isEqualTo(drd)
+                }
+
                 is WeightedRandomActivationFactory -> {
 //                    Assertions.assertThat(activation.configuration).isNull()
                     val newInstance = factory.withConfiguration(wrConfig.trimIndent())

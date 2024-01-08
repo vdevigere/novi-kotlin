@@ -34,9 +34,7 @@ class WeightedRandomActivation(
     }
 }
 
-class WeightedRandomActivationFactory: ActivationFactory{
-    override fun withConfiguration(configuration: String): BaseActivation<*> {
-        return WeightedRandomActivation(configStr = configuration)
-    }
-
+class WeightedRandomActivationFactory : ActivationFactory {
+    override fun withConfiguration(configuration: String): BaseActivation<*> =
+        WeightedRandomActivation(configStr = configuration)
 }

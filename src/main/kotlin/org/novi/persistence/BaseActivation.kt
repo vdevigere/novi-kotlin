@@ -37,9 +37,9 @@ abstract class BaseActivation<T : Any>(
 
     abstract fun evaluate(context: String): Boolean
 
-    infix fun and(that: BaseActivation<*>): BaseActivation<String> = AndActivation(this, that, id)
+    infix fun and(that: BaseActivation<*>): BaseActivation<String> = AndActivation(this, that)
 
-    infix fun or(that: BaseActivation<*>): BaseActivation<String> = OrActivation(this, that, id)
+    infix fun or(that: BaseActivation<*>): BaseActivation<String> = OrActivation(this, that)
 
-    operator fun not(): BaseActivation<String> = NotActivation(this, id)
+    operator fun not(): BaseActivation<String> = NotActivation(this)
 }

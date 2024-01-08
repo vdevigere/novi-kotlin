@@ -37,9 +37,8 @@ class DateTimeActivation(
     }
 }
 
-class DateTimeActivationFactory : ActivationFactory{
-    override fun withConfiguration(configuration: String): BaseActivation<*> {
-        return DateTimeActivation(configStr = configuration)
-    }
+class DateTimeActivationFactory : ActivationFactory {
+    override fun withConfiguration(configuration: String): BaseActivation<*> =
+        DateTimeActivation(configStr = configuration)
 
 }
