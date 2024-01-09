@@ -48,3 +48,13 @@ noArg {
     annotation("org.novi.core.NoArg")
     invokeInitializers = true
 }
+
+tasks.register<Copy>("copyDeps"){
+    from(configurations.compileClasspath)
+    from(configurations.runtimeClasspath)
+    into(layout.buildDirectory.dir("deps"))
+}
+
+tasks.named("build"){
+    finalizedBy("copyDeps")
+}
