@@ -11,7 +11,7 @@ import org.novi.persistence.ActivationConfigRepositoryAware
 import org.novi.persistence.BaseActivation
 import java.text.SimpleDateFormat
 
-class NoviOperationActivationFactory(val op: String? = null) : ActivationFactory, ActivationConfigRepositoryAware() {
+class NoviOperationActivationFactory(val op: String? = null) : ActivationFactory, ActivationConfigRepositoryAware<ActivationFactory>() {
     private val dateFormat: String = "dd-MM-yyyy hh:mm"
     private val simpleDateFormat = SimpleDateFormat(dateFormat)
     private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(simpleDateFormat)

@@ -19,7 +19,7 @@ class AndActivation(
     override fun evaluate(context: String): Boolean = op1.evaluate(context) && op2.evaluate(context)
 }
 
-class AndActivationFactory : ActivationFactory, ActivationConfigRepositoryAware() {
+class AndActivationFactory : ActivationFactory, ActivationConfigRepositoryAware<ActivationFactory>() {
     override fun withConfiguration(configuration: String): BaseActivation<*> =
         NoviOperationActivationFactory("AND").setActivationConfigRepository(repository).withConfiguration(configuration)
 

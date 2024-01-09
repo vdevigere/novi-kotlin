@@ -11,9 +11,8 @@ import org.novi.exceptions.IdNotFoundException
 abstract class BaseActivation<T : Any>(
     private var id: Long? = null,
     configStr: String? = null
-) {
+) : ActivationConfigRepositoryAware<BaseActivation<T>>(){
 
-    private lateinit var repository: ActivationConfigRepository
     private var configuration: String? = configStr
         get() = field ?: run {
             val optional = repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
@@ -30,7 +29,7 @@ abstract class BaseActivation<T : Any>(
 
     abstract fun valueOf(s: String): T
 
-    open fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<T> {
+    override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<T> {
         this.repository = repository
         return this
     }

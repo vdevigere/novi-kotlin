@@ -22,8 +22,8 @@ class EvaluatedFlagController(
         val flag: Flag = flagRepository.findById(id).orElse(Flag.EMPTY)
         for (activationConfigs in flag.activationConfigs) {
             val factory = REGISTRY.instance[Class.forName(activationConfigs.name).kotlin]
-            if (factory is ActivationConfigRepositoryAware) {
-                (factory as ActivationConfigRepositoryAware).setActivationConfigRepository(activationConfigRepository)
+            if (factory is ActivationConfigRepositoryAware<*>) {
+                (factory as ActivationConfigRepositoryAware<*>).setActivationConfigRepository(activationConfigRepository)
             }
             resultingStatus =
                 resultingStatus && factory?.withConfiguration(activationConfigs.config)?.evaluate(context) ?: false
