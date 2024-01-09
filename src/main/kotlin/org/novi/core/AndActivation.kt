@@ -1,5 +1,6 @@
 package org.novi.core
 
+import org.novi.activations.factories.NoviOperationActivationFactory
 import org.novi.persistence.ActivationConfigRepository
 import org.novi.persistence.BaseActivation
 
@@ -15,4 +16,16 @@ class AndActivation(
     }
 
     override fun evaluate(context: String): Boolean = op1.evaluate(context) && op2.evaluate(context)
+}
+
+class AndActivationFactory : ActivationFactory {
+    override fun withConfiguration(configuration: String): BaseActivation<*> =
+        NoviOperationActivationFactory("AND").setActivationConfigRepository(repository).withConfiguration(configuration)
+
+    private lateinit var repository: ActivationConfigRepository
+
+    fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationFactory {
+        this.repository = repository
+        return this
+    }
 }

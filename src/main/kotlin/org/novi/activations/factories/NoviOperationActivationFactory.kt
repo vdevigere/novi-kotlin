@@ -10,7 +10,7 @@ import org.novi.persistence.BaseActivation
 import org.novi.registry
 import java.text.SimpleDateFormat
 
-class NoviOperationActivationFactory : ActivationFactory {
+class NoviOperationActivationFactory(val op: String? = null) : ActivationFactory {
     private val dateFormat: String = "dd-MM-yyyy hh:mm"
     private val simpleDateFormat = SimpleDateFormat(dateFormat)
     private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(simpleDateFormat)
@@ -31,7 +31,7 @@ class NoviOperationActivationFactory : ActivationFactory {
             val factory = registry.instance[clazz] as ActivationFactory
             factory.withConfiguration(activation.config)
         } else NoOpActivation()
-        when (operation.operation) {
+        when (op ?: operation.operation) {
             "AND" -> {
                 val optional2 = repository.findById(operation.activationIds[1])
                 val op2 = if (optional2.isPresent) {
