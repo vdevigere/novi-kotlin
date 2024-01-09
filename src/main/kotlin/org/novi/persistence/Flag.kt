@@ -1,6 +1,7 @@
 package org.novi.persistence
 
 import jakarta.persistence.*
+import java.util.*
 import kotlin.jvm.Transient
 
 @Entity
@@ -14,8 +15,12 @@ data class Flag(
     val name: String,
 
     @Transient
-    val status: Boolean,
+    var status: Boolean,
 
     @ManyToMany(cascade = [CascadeType.ALL])
     val activationConfigs: Set<ActivationConfig>
-)
+) {
+    companion object {
+        val EMPTY: Flag = Flag(null, "Null", false, Collections.emptySet())
+    }
+}

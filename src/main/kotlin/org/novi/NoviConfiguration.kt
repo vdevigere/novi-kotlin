@@ -15,11 +15,11 @@ class NoviConfiguration() {
     private final fun registerPlugins() {
         val loader = ServiceLoader.load(ActivationFactory::class.java)
         for (factory in loader) {
-            registry.instance[factory::class] = factory
+            REGISTRY.instance[factory::class] = factory
         }
     }
 }
 
-object registry {
+object REGISTRY {
     val instance = HashMap<KClass<out ActivationFactory>, ActivationFactory>()
 }

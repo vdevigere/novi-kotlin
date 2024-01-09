@@ -49,12 +49,12 @@ noArg {
     invokeInitializers = true
 }
 
-tasks.register<Copy>("copyDeps"){
+tasks.register<Copy>("copyDeps") {
     from(configurations.compileClasspath)
     from(configurations.runtimeClasspath)
     into(layout.buildDirectory.dir("deps"))
 }
 
-tasks.named("build"){
+tasks.named("build") {
     finalizedBy("copyDeps")
 }
