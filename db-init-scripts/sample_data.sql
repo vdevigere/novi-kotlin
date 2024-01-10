@@ -18,11 +18,11 @@ values
   ),
   (
     3, '{"activationIds":[1,2],"operation":"AND"}',
-    '1 AND 2', 'org.novi.activations.factories.NoviOperationActivationFactory'
+    '1 AND 2', 'org.novi.activations.factories.ComboBooleanActivationFactory'
   ),
  (
    4, '{"activationIds":[1,2],"operation":"OR"}',
-   '1 OR 2', 'org.novi.activations.factories.NoviOperationActivationFactory'
+   '1 OR 2', 'org.novi.activations.factories.ComboBooleanActivationFactory'
  ),
  (
     5, '[1,2]',
