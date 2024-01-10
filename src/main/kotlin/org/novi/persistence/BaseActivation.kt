@@ -9,7 +9,7 @@ abstract class BaseActivation<T : Any>(
 ) : ActivationConfigRepositoryAware<BaseActivation<T>>, ActivationConfigAware {
 
 
-    protected lateinit var repository: ActivationConfigRepository
+    private lateinit var repository: ActivationConfigRepository
     protected lateinit var configuration: String
 
     val parsedConfig: T
