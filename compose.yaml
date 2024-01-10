@@ -1,0 +1,27 @@
+services:
+  web:
+    container_name: novi-kotlin
+    restart: always
+    depends_on: [ postgres ]
+    build: .
+    volumes:
+      - ./plugin-activations:/var/plugin-activations
+    ports:
+      - "8080:8080"
+    environment:
+      - "spring.datasource.url=jdbc:postgresql://postgres:5432/novi-kotlin"
+      - "spring.datasource.username=novi-user"
+      - "spring.datasource.password=secret"
+      - "activations.plugin.dir=/var/plugin-activations"
+  postgres:
+    image: "postgres:15.5"
+    container_name: "novi-kotlin-pg"
+    restart: always
+    volumes:
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=novi-user'
+      - 'POSTGRES_DB=novi-kotlin'
+      - 'POSTGRES_PASSWORD=secret'
