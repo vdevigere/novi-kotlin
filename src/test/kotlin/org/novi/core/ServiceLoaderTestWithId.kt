@@ -4,7 +4,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotSame
-import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.novi.activations.*
 import java.text.SimpleDateFormat
@@ -48,6 +47,7 @@ class ServiceLoaderTestWithId {
                     val newInstance = factory.setConfiguration(wrConfig.trimIndent())
                     assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
                 }
+
                 is NoOpActivationFactory -> {
                     val newInstance = factory.setConfiguration("Config-In")
                     assertThat(newInstance.parsedConfig).isEqualTo("Config-In")
@@ -62,13 +62,8 @@ class ServiceLoaderTestWithId {
         val loader = ServiceLoader.load(ActivationConfigAware::class.java)
         for (factory in loader) {
             when (factory) {
-                //When using xxxActivation as a service, you don't get a new Instance
-                is WeightedRandomActivation -> {
-                    val clone = factory.setConfiguration(wrConfig)
-                    assertSame(clone, factory)
-                }
                 //Using a factory returns a new Instance
-                is WeightedRandomActivationFactory ->{
+                is WeightedRandomActivationFactory -> {
                     val clone = factory.setConfiguration(wrConfig)
                     assertNotSame(clone, factory)
                 }

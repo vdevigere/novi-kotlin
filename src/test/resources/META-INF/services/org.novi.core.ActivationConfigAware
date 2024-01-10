@@ -3,4 +3,3 @@ org.novi.activations.DateTimeActivationFactory
 org.novi.activations.WeightedRandomActivationFactory
 org.novi.activations.factories.NoviOperationActivationFactory
 org.novi.core.AndActivationFactory
-org.novi.activations.WeightedRandomActivation

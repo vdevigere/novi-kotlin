@@ -10,9 +10,10 @@ import org.novi.core.ActivationConfigAware
 import org.novi.persistence.BaseActivation
 
 class WeightedRandomActivation(
-    id: Long? = null
+    id: Long? = null,
+    configString: String? = null
 ) :
-    BaseActivation<List<Pair<String, Double>>>(id) {
+    BaseActivation<List<Pair<String, Double>>>(id, configString) {
 
     override fun valueOf(s: String): List<Pair<String, Double>> {
         val mapper = jacksonObjectMapper()
@@ -32,10 +33,11 @@ class WeightedRandomActivation(
         return ed.sample() == variantToCheck
     }
 
-    companion object : ActivationConfigAware{
+    companion object : ActivationConfigAware {
         override fun setConfiguration(configuration: String): BaseActivation<*> =
-            WeightedRandomActivation().setConfiguration(configuration)
+            WeightedRandomActivation(configString = configuration)
 
     }
 }
+
 class WeightedRandomActivationFactory : ActivationConfigAware by WeightedRandomActivation.Companion

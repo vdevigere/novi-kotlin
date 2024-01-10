@@ -13,9 +13,10 @@ data class DateRangeData(val startDateTime: Date, val endDateTime: Date)
 
 class DateTimeActivation(
     id: Long? = null,
+    configString: String? = null,
     dateFormat: String = "dd-MM-yyyy hh:mm"
 ) :
-    BaseActivation<DateRangeData>(id) {
+    BaseActivation<DateRangeData>(id, configString) {
 
     // An explicit no-arg constructor is required despite the annotation @NoArg because of
     //https://youtrack.jetbrains.com/issue/KT-33502/No-arg-compiler-plugin-property-initializers-defined-in-the-primary-constructor-are-not-called
@@ -35,10 +36,11 @@ class DateTimeActivation(
         return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
     }
 
-    companion object: ActivationConfigAware{
+    companion object : ActivationConfigAware {
         override fun setConfiguration(configuration: String): BaseActivation<*> =
-            DateTimeActivation().setConfiguration(configuration)
+            DateTimeActivation(configString = configuration)
 
     }
 }
+
 class DateTimeActivationFactory : ActivationConfigAware by DateTimeActivation.Companion

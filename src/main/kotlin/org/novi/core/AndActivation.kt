@@ -8,7 +8,9 @@ import org.novi.persistence.BaseActivation
 class AndActivation(
     private val op1: BaseActivation<*>,
     private val op2: BaseActivation<*>,
-) : BaseActivation<String>() {
+    id: Long? = null,
+    configString: String? = null
+) : BaseActivation<String>(id, configString) {
     override fun valueOf(s: String): String = "( ${op1.parsedConfig} & ${op2.parsedConfig} )"
     override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<String> {
         op1.setActivationConfigRepository(repository)
@@ -18,10 +20,11 @@ class AndActivation(
 
     override fun evaluate(context: String): Boolean = op1.evaluate(context) && op2.evaluate(context)
 
-    companion object: ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
+    companion object : ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
         private lateinit var repository: ActivationConfigRepository
         override fun setConfiguration(configuration: String): BaseActivation<*> =
-            NoviOperationActivationFactory("AND").setActivationConfigRepository(this.repository).setConfiguration(configuration)
+            NoviOperationActivationFactory("AND").setActivationConfigRepository(this.repository)
+                .setConfiguration(configuration)
 
         override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationConfigAware {
             this.repository = repository
@@ -30,4 +33,5 @@ class AndActivation(
     }
 }
 
-class AndActivationFactory : ActivationConfigAware by AndActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by AndActivation.Companion
+class AndActivationFactory : ActivationConfigAware by AndActivation.Companion,
+    ActivationConfigRepositoryAware<ActivationConfigAware> by AndActivation.Companion

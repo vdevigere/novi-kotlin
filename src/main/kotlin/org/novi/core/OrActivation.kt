@@ -5,9 +5,11 @@ import org.novi.persistence.BaseActivation
 
 class OrActivation(
     private val op1: BaseActivation<*>,
-    private val op2: BaseActivation<*>
+    private val op2: BaseActivation<*>,
+    id: Long? = null,
+    configString: String? = null
 ) :
-    BaseActivation<String>() {
+    BaseActivation<String>(id, configString) {
 
     override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<String> {
         op1.setActivationConfigRepository(repository)

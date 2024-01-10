@@ -1,6 +1,5 @@
 package org.novi.persistence
 
-import org.novi.core.ActivationConfigAware
 import org.novi.core.AndActivation
 import org.novi.core.NotActivation
 import org.novi.core.OrActivation
@@ -10,11 +9,11 @@ import kotlin.jvm.optionals.getOrElse
 abstract class BaseActivation<T : Any>(
     private var id: Long? = null,
     private val configString: String? = null
-) : ActivationConfigRepositoryAware<BaseActivation<T>>, ActivationConfigAware {
+) : ActivationConfigRepositoryAware<BaseActivation<T>> {
 
 
     private lateinit var repository: ActivationConfigRepository
-    protected lateinit var configuration: String
+    private lateinit var configuration: String
 
     val parsedConfig: T
         get() {
@@ -41,8 +40,4 @@ abstract class BaseActivation<T : Any>(
     infix fun or(that: BaseActivation<*>): BaseActivation<String> = OrActivation(this, that)
 
     operator fun not(): BaseActivation<String> = NotActivation(this)
-    override fun setConfiguration(configuration: String): BaseActivation<*> {
-        this.configuration = configuration
-        return this
-    }
 }

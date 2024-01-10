@@ -3,7 +3,10 @@ package org.novi.core
 import org.novi.persistence.ActivationConfigRepository
 import org.novi.persistence.BaseActivation
 
-class NotActivation(private val op1: BaseActivation<*>) : BaseActivation<String>() {
+class NotActivation(
+    private val op1: BaseActivation<*>, id: Long? = null,
+    configString: String? = null
+) : BaseActivation<String>(id, configString) {
     override fun valueOf(s: String): String = "!(${op1.parsedConfig})"
     override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<String> {
         op1.setActivationConfigRepository(repository)
