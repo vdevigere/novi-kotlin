@@ -4,27 +4,35 @@ import org.novi.core.AndActivation
 import org.novi.core.NotActivation
 import org.novi.core.OrActivation
 import org.novi.exceptions.IdNotFoundException
-import kotlin.jvm.optionals.getOrElse
+import kotlin.jvm.optionals.getOrNull
 
 abstract class BaseActivation<T : Any>(
     private var id: Long? = null,
-    private val configString: String? = null
+    configString: String? = null,
+    dataVal: T? = null
 ) : ActivationConfigRepositoryAware<BaseActivation<T>> {
 
 
-    private lateinit var repository: ActivationConfigRepository
-    private lateinit var configuration: String
+    protected lateinit var repository: ActivationConfigRepository
+    private var configuration: String? = configString
+    var parsedConfig: T? = dataVal
+        get() = field ?: valueOfWrapper(
+            configuration ?: lookupById(
+                id ?: throw IdNotFoundException("Id has not been set")
+            ) ?: throw IdNotFoundException("$id, not found in Db")
+        )
+        private set
 
-    val parsedConfig: T
-        get() {
-            if (!this::configuration.isInitialized) {
-                configuration =
-                    configString ?: repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
-                        .getOrElse { throw IdNotFoundException("Id not found in database") }.config
-            }
-            return valueOf(configuration)
-        }
+    private fun lookupById(identifier: Long): String? {
+        configuration = repository.findById(identifier).getOrNull()?.config
+        return configuration
+    }
 
+    private fun valueOfWrapper(s: String): T {
+        val temp = valueOf(s)
+        parsedConfig = temp
+        return temp
+    }
 
     abstract fun valueOf(s: String): T
 
@@ -35,9 +43,9 @@ abstract class BaseActivation<T : Any>(
 
     abstract fun evaluate(context: String): Boolean
 
-    infix fun and(that: BaseActivation<*>): BaseActivation<String> = AndActivation(this, that)
+    infix fun and(that: BaseActivation<*>): BaseActivation<*> = AndActivation(dataValue = arrayOf(this, that))
 
-    infix fun or(that: BaseActivation<*>): BaseActivation<String> = OrActivation(this, that)
+    infix fun or(that: BaseActivation<*>): BaseActivation<*> = OrActivation(dataValue = arrayOf(this, that))
 
     operator fun not(): BaseActivation<String> = NotActivation(this)
 }

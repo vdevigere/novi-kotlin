@@ -128,7 +128,7 @@ class NoviOperationActivationConfigAwareTest {
         val mockRepo = mock(ActivationConfigRepository::class.java)
         `when`(mockRepo.findById(1L)).thenReturn(Optional.of(op1config))
         `when`(mockRepo.findById(2L)).thenReturn(Optional.of(op2config))
-
+        `when`(mockRepo.findAllById(listOf(1L, 2L))).thenReturn(listOf(op1config, op2config))
         val context = """
                 {
                     "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00",
@@ -139,14 +139,8 @@ class NoviOperationActivationConfigAwareTest {
                 }
                 """
         val factory = AndActivationFactory()
-        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(
-            """
-            {
-                "activationIds":[1,2]
-            }
-        """.trimIndent()
-        )
-        assertThat(activation.evaluate(context)).isFalse
+        val activation = factory.setConfiguration("[1,2]")
+        assertThat(activation.setActivationConfigRepository(mockRepo).evaluate(context)).isFalse
     }
 
     companion object {

@@ -33,7 +33,7 @@ class DateTimeActivation(
         val contextMap = mapper.treeToValue(root, Map::class.java)
         val df = simpleDateFormat
         val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
-        return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
+        return parsedConfig!!.startDateTime <= currentDateTime && parsedConfig!!.endDateTime > currentDateTime
     }
 
     companion object : ActivationConfigAware {

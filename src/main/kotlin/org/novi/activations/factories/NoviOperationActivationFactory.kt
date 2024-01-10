@@ -42,7 +42,7 @@ class NoviOperationActivationFactory(val op: String? = null) : ActivationConfigA
                     val factory = REGISTRY.instance[clazz] as ActivationConfigAware
                     factory.setConfiguration(activation.config)
                 } else NoOpActivation()
-                return AndActivation(op1, op2)
+                return AndActivation(dataValue = arrayOf(op1, op2))
             }
 
             "OR" -> {
@@ -53,7 +53,7 @@ class NoviOperationActivationFactory(val op: String? = null) : ActivationConfigA
                     val factory = REGISTRY.instance[clazz] as ActivationConfigAware
                     factory.setConfiguration(activation.config)
                 } else NoOpActivation()
-                return OrActivation(op1, op2)
+                return OrActivation(dataValue = arrayOf(op1, op2))
             }
 
             "NOT" -> {

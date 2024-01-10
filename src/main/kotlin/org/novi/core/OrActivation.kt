@@ -1,22 +1,56 @@
 package org.novi.core
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import org.novi.REGISTRY
 import org.novi.persistence.ActivationConfigRepository
+import org.novi.persistence.ActivationConfigRepositoryAware
 import org.novi.persistence.BaseActivation
 
 class OrActivation(
-    private val op1: BaseActivation<*>,
-    private val op2: BaseActivation<*>,
     id: Long? = null,
-    configString: String? = null
+    configString: String? = null,
+    dataValue: Array<BaseActivation<*>>? = null
 ) :
-    BaseActivation<String>(id, configString) {
+    BaseActivation<Array<BaseActivation<*>>>(id, configString, dataValue) {
 
-    override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<String> {
-        op1.setActivationConfigRepository(repository)
-        op2.setActivationConfigRepository(repository)
-        return super.setActivationConfigRepository(repository)
+    override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<Array<BaseActivation<*>>> {
+        this.repository = repository
+        parsedConfig!!.forEach { it.setActivationConfigRepository(repository) }
+        return this
     }
 
-    override fun valueOf(s: String): String = "( ${op1.parsedConfig} || ${op2.parsedConfig} )"
-    override fun evaluate(context: String): Boolean = op1.evaluate(context) || op2.evaluate(context)
+    override fun valueOf(s: String): Array<BaseActivation<*>>{
+        val retVal = ArrayList<BaseActivation<*>>()
+        //1. Parse s into an array of ids
+        val ids = mapper.readValue<Array<Long>>(s)
+        //2. Lookup the configs for each id and assemble into a list
+        val found = repository.findAllById(ids.asList())
+        for (ac in found) {
+            val clazz = Class.forName(ac.name).kotlin
+            val factory = REGISTRY.instance[clazz]
+            val ba = factory?.setConfiguration(ac.config)
+            if (ba != null) retVal.add(ba)
+        }
+        return retVal.toTypedArray()
+    }
+    override fun evaluate(context: String): Boolean {
+        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce{acc, next -> acc || next}
+        return retValue
+    }
+
+    companion object: ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware>{
+        val mapper = jacksonObjectMapper();
+        private lateinit var repository: ActivationConfigRepository
+
+        override fun setConfiguration(configuration: String): BaseActivation<*> =
+            OrActivation(configString = configuration).setActivationConfigRepository(repository)
+
+        override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationConfigAware {
+            this.repository = repository
+            return this
+        }
+    }
 }
+
+class OrActivationFactory : ActivationConfigAware by OrActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by OrActivation.Companion

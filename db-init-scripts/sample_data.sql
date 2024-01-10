@@ -1,10 +1,10 @@
 insert into flag
 values
-  (1, 'featureA'),
-  (2, 'featureB'),
-  (3, 'featureC'),
-  (4, 'featureD'),
-  (5, 'featureE'),
+  (1, 'Implicit AND ids 1, 2'),
+  (2, 'Use BooleanActivFac to AND 1, 2'),
+  (3, 'Use BooleanActivFac to OR 1, 2'),
+  (4, 'Use AndActivFac to AND 1, 2'),
+  (5, 'Use OrActivFac to OR 1, 2'),
   (6, 'featureF');
 insert into activation_config
 values
@@ -25,20 +25,14 @@ values
    '1 OR 2', 'org.novi.activations.factories.NoviOperationActivationFactory'
  ),
  (
-    5, '{"activationIds":[6,7],"operation":"AND"}',
-    '!False & (False | True)', 'org.novi.activations.factories.NoviOperationActivationFactory'
+    5, '[1,2]',
+    'DateTimeActivation && WeightedRandomActivation', 'org.novi.core.AndActivationFactory'
   ),
  (
-    6, '!org.novi.activations.dsl.FalseActivation("False-1") & (org.novi.activations.dsl.FalseActivation("False-2") | org.novi.activations.dsl.TrueActivation("True-3"))',
-    'DSL', 'org.novi.web.activations.DslEvaluator'
- ),
- (
-     7, 'org.novi.activations.dsl.FalseActivation("False-1") & (org.novi.activations.dsl.FalseActivation("False-2") | org.novi.activations.dsl.TrueActivation("True-3"))',
-     'DSL', 'org.novi.web.activations.DslEvaluator'
-  ),
-  (
-    8, 'does not matter', 'DSL activation used as non-dsl activation', 'org.novi.activations.dsl.DynamicActivation'
-  );
+  6, '[1,2]',
+  'DateTimeActivation && WeightedRandomActivation', 'org.novi.core.OrActivationFactory'
+ );
+
 insert into flag_activation_configs
 values
   (1, 1),
@@ -46,5 +40,4 @@ values
   (2, 3),
   (3, 4),
   (4, 5),
-  (5, 7),
-  (6, 8);
+  (5, 6);
