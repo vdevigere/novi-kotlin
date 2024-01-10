@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-alpine as application
+FROM eclipse-temurin:21-jdk-alpine as builder
 WORKDIR /workspace/novi-kotlin
 COPY .gradle .gradle
 COPY gradle gradle
@@ -6,13 +6,12 @@ COPY gradlew .
 COPY src src
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
-RUN ./gradlew build -x test
+RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon -i  clean build
 
 FROM eclipse-temurin:21-jre-alpine
 ARG APP_WEB_TARGET=/workspace/novi-kotlin/build
 WORKDIR /Novi
-COPY --from=application ${APP_WEB_TARGET}/classes/kotlin/main .
-COPY --from=application ${APP_WEB_TARGET}/deps deps
-COPY --from=application ${APP_WEB_TARGET}/resources/main .
-#COPY --from=application ${ACTIVATION_TARGET}/*.jar /var/builtIn-activations/
+COPY --from=builder ${APP_WEB_TARGET}/classes/kotlin/main .
+COPY --from=builder ${APP_WEB_TARGET}/deps deps
+COPY --from=builder ${APP_WEB_TARGET}/resources/main .
 ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -cp .:deps/* org.novi.NoviKotlinApplicationKt ${0} ${@}"]
