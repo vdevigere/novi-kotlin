@@ -139,8 +139,8 @@ class NoviOperationActivationConfigAwareTest {
                 }
                 """
         val factory = AndActivationFactory()
-        val activation = factory.setConfiguration("[1,2]")
-        assertThat(activation.setActivationConfigRepository(mockRepo).evaluate(context)).isFalse
+        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration("[1,2]")
+        assertThat(activation.evaluate(context)).isFalse
     }
 
     companion object {
