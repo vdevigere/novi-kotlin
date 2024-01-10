@@ -6,6 +6,7 @@ import org.novi.REGISTRY
 import org.novi.persistence.ActivationConfigRepository
 import org.novi.persistence.ActivationConfigRepositoryAware
 import org.novi.persistence.BaseActivation
+import org.slf4j.LoggerFactory
 
 class OrActivation(
     id: Long? = null,
@@ -13,6 +14,8 @@ class OrActivation(
     dataValue: Array<BaseActivation<*>>? = null
 ) :
     BaseActivation<Array<BaseActivation<*>>>(id, configString, dataValue) {
+
+    private val logger = LoggerFactory.getLogger(OrActivation::class.java)
 
     override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<Array<BaseActivation<*>>> {
         this.repository = repository
@@ -35,7 +38,11 @@ class OrActivation(
         return retVal.toTypedArray()
     }
     override fun evaluate(context: String): Boolean {
-        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce{acc, next -> acc || next}
+        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce{acc, next ->
+            val result = acc || next
+            logger.debug("$acc || $next = $result")
+            result
+        }
         return retValue
     }
 
