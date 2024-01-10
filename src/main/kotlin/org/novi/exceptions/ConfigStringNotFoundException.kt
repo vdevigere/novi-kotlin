@@ -1,5 +1,3 @@
 package org.novi.exceptions
 
-class ConfigStringNotFoundException(s: String) : Throwable() {
-
-}
+class ConfigStringNotFoundException(s: String) : Throwable(s)

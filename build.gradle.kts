@@ -6,7 +6,6 @@ plugins {
     kotlin("jvm") version "1.9.21"
     kotlin("plugin.spring") version "1.9.21"
     kotlin("plugin.jpa") version "1.9.22"
-    kotlin("plugin.noarg") version "1.9.22"
 }
 
 group = "org.novi"
@@ -42,11 +41,6 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-noArg {
-    annotation("org.novi.core.NoArg")
-    invokeInitializers = true
 }
 
 tasks.register<Copy>("copyDeps") {
