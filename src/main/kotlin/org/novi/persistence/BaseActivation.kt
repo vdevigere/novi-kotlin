@@ -1,11 +1,15 @@
 package org.novi.persistence
 
-import org.novi.core.*
+import org.novi.core.ActivationConfigAware
+import org.novi.core.AndActivation
+import org.novi.core.NotActivation
+import org.novi.core.OrActivation
 import org.novi.exceptions.IdNotFoundException
+import kotlin.jvm.optionals.getOrElse
 
-@NoArg
 abstract class BaseActivation<T : Any>(
     private var id: Long? = null,
+    private val configString: String? = null
 ) : ActivationConfigRepositoryAware<BaseActivation<T>>, ActivationConfigAware {
 
 
@@ -15,10 +19,9 @@ abstract class BaseActivation<T : Any>(
     val parsedConfig: T
         get() {
             if (!this::configuration.isInitialized) {
-                val optional = repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
-                if (optional.isPresent) {
-                    this.configuration = optional.get().config
-                }
+                configuration =
+                    configString ?: repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
+                        .getOrElse { throw IdNotFoundException("Id not found in database") }.config
             }
             return valueOf(configuration)
         }
