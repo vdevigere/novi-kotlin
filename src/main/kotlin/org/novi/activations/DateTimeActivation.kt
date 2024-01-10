@@ -34,9 +34,11 @@ class DateTimeActivation(
         val currentDateTime = df.parse(contextMap[this.javaClass.canonicalName + ".currentDateTime"] as String)
         return parsedConfig.startDateTime <= currentDateTime && parsedConfig.endDateTime > currentDateTime
     }
-}
 
-class DateTimeActivationFactory : ActivationConfigAware {
-    override fun setConfiguration(configuration: String): BaseActivation<*> =
-        DateTimeActivation().setConfiguration(configuration)
+    companion object: ActivationConfigAware{
+        override fun setConfiguration(configuration: String): BaseActivation<*> =
+            DateTimeActivation().setConfiguration(configuration)
+
+    }
 }
+class DateTimeActivationFactory : ActivationConfigAware by DateTimeActivation.Companion

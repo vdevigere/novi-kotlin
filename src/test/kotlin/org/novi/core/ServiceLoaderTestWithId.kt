@@ -33,6 +33,7 @@ class ServiceLoaderTestWithId {
         val loader = ServiceLoader.load(ActivationConfigAware::class.java)
         assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivationFactory::class.java)
         assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivationFactory::class.java)
+        assertThat(loader).hasAtLeastOneElementOfType(NoOpActivationFactory::class.java)
         for (factory in loader) {
             when (factory) {
                 is DateTimeActivationFactory -> {
@@ -44,9 +45,12 @@ class ServiceLoaderTestWithId {
                 }
 
                 is WeightedRandomActivationFactory -> {
-//                    Assertions.assertThat(activation.configuration).isNull()
                     val newInstance = factory.setConfiguration(wrConfig.trimIndent())
                     assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
+                }
+                is NoOpActivationFactory -> {
+                    val newInstance = factory.setConfiguration("Config-In")
+                    assertThat(newInstance.parsedConfig).isEqualTo("Config-In")
                 }
             }
 
@@ -58,10 +62,12 @@ class ServiceLoaderTestWithId {
         val loader = ServiceLoader.load(ActivationConfigAware::class.java)
         for (factory in loader) {
             when (factory) {
+                //When using xxxActivation as a service, you don't get a new Instance
                 is WeightedRandomActivation -> {
                     val clone = factory.setConfiguration(wrConfig)
                     assertSame(clone, factory)
                 }
+                //Using a factory returns a new Instance
                 is WeightedRandomActivationFactory ->{
                     val clone = factory.setConfiguration(wrConfig)
                     assertNotSame(clone, factory)

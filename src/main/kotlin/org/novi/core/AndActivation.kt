@@ -17,16 +17,17 @@ class AndActivation(
     }
 
     override fun evaluate(context: String): Boolean = op1.evaluate(context) && op2.evaluate(context)
-}
 
-class AndActivationFactory : ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
-    private lateinit var repository: ActivationConfigRepository
-    override fun setConfiguration(configuration: String): BaseActivation<*> =
-        NoviOperationActivationFactory("AND").setActivationConfigRepository(repository).setConfiguration(configuration)
+    companion object: ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
+        private lateinit var repository: ActivationConfigRepository
+        override fun setConfiguration(configuration: String): BaseActivation<*> =
+            NoviOperationActivationFactory("AND").setActivationConfigRepository(this.repository).setConfiguration(configuration)
 
-
-    override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationConfigAware {
-        this.repository = repository
-        return this
+        override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationConfigAware {
+            this.repository = repository
+            return this
+        }
     }
 }
+
+class AndActivationFactory : ActivationConfigAware by AndActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by AndActivation.Companion

@@ -31,9 +31,11 @@ class WeightedRandomActivation(
         val ed = EnumeratedDistribution(rnd, this.parsedConfig)
         return ed.sample() == variantToCheck
     }
-}
 
-class WeightedRandomActivationFactory : ActivationConfigAware {
-    override fun setConfiguration(configuration: String): BaseActivation<*> =
-        WeightedRandomActivation().setConfiguration(configuration)
+    companion object : ActivationConfigAware{
+        override fun setConfiguration(configuration: String): BaseActivation<*> =
+            WeightedRandomActivation().setConfiguration(configuration)
+
+    }
 }
+class WeightedRandomActivationFactory : ActivationConfigAware by WeightedRandomActivation.Companion
