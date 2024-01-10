@@ -3,6 +3,7 @@ package org.novi.core
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.novi.activations.DateTimeActivation
@@ -118,5 +119,41 @@ class DslTestWithId {
         val bEval2 =
             DateTimeActivation(6L, dateFormat = "MM/dd/yyyy hh:mm") and WeightedRandomActivation(5L)
         assertThat(bEval2.setActivationConfigRepository(mockRepo).evaluate(contextAltFormat)).isFalse
+    }
+
+    @Test
+    fun testCloneDSL() {
+        val wrActivation = mock(ActivationConfig::class.java)
+        `when`(wrActivation.config).thenReturn(
+            """
+                {
+                "SampleA":100.0,
+                "SampleB":0,
+                "SampleC":0
+                }
+                """
+        )
+        val contextTrue = """
+                {
+                    "org.novi.activations.WeightedRandomActivation":{
+                                            "seed": 200,
+                                            "variantToCheck": "SampleA"
+                                        }                    
+                }
+                """
+        val contextFalse = """
+                {
+                    "org.novi.activations.WeightedRandomActivation":{
+                                            "seed": 200,
+                                            "variantToCheck": "SampleB"
+                                        }                    
+                }
+                """
+        val mockRepo = mock(ActivationConfigRepository::class.java)
+        `when`(mockRepo.findById(1L)).thenReturn(Optional.of(wrActivation))
+        val wra = WeightedRandomActivation(1L)
+        assertThat(wra.setActivationConfigRepository(mockRepo).evaluate(contextTrue)).isTrue
+        assertThat(wra.setActivationConfigRepository(mockRepo).evaluate(contextFalse)).isFalse
+        Mockito.verify(mockRepo, Mockito.times(1)).findById(1L)
     }
 }

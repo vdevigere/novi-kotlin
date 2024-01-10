@@ -2,12 +2,11 @@ package org.novi.core
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotSame
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
-import org.novi.activations.DateRangeData
-import org.novi.activations.DateTimeActivation
-import org.novi.activations.DateTimeActivationFactory
-import org.novi.activations.WeightedRandomActivationFactory
+import org.novi.activations.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,8 +31,8 @@ class ServiceLoaderTestWithId {
     @Test
     fun testServiceLoaderFactory() {
         val loader = ServiceLoader.load(ActivationConfigAware::class.java)
-        Assertions.assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivationFactory::class.java)
-        Assertions.assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivationFactory::class.java)
+        assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivationFactory::class.java)
+        assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivationFactory::class.java)
         for (factory in loader) {
             when (factory) {
                 is DateTimeActivationFactory -> {
@@ -41,16 +40,33 @@ class ServiceLoaderTestWithId {
                     val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
                     val mapper = jacksonObjectMapper().setDateFormat(sdf)
                     val drd = mapper.readValue<DateRangeData>(dtaConfig)
-                    Assertions.assertThat(dta.parsedConfig).isEqualTo(drd)
+                    assertThat(dta.parsedConfig).isEqualTo(drd)
                 }
 
                 is WeightedRandomActivationFactory -> {
 //                    Assertions.assertThat(activation.configuration).isNull()
                     val newInstance = factory.setConfiguration(wrConfig.trimIndent())
-                    Assertions.assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
+                    assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
                 }
             }
 
+        }
+    }
+
+    @Test
+    fun testCloneServiceLoader() {
+        val loader = ServiceLoader.load(ActivationConfigAware::class.java)
+        for (factory in loader) {
+            when (factory) {
+                is WeightedRandomActivation -> {
+                    val clone = factory.setConfiguration(wrConfig)
+                    assertSame(clone, factory)
+                }
+                is WeightedRandomActivationFactory ->{
+                    val clone = factory.setConfiguration(wrConfig)
+                    assertNotSame(clone, factory)
+                }
+            }
         }
     }
 }

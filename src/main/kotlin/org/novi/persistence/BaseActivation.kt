@@ -1,7 +1,6 @@
 package org.novi.persistence
 
 import org.novi.core.*
-import org.novi.exceptions.ConfigStringNotFoundException
 import org.novi.exceptions.IdNotFoundException
 
 @NoArg
