@@ -11,25 +11,27 @@ import org.novi.persistence.ActivationConfigRepositoryAware
 import org.novi.persistence.BaseActivation
 import java.text.SimpleDateFormat
 
-class NoviOperationActivationFactory(val op: String? = null) : ActivationFactory, ActivationConfigRepositoryAware<ActivationFactory>() {
+class NoviOperationActivationFactory(val op: String? = null) : ActivationConfigAware,
+    ActivationConfigRepositoryAware<ActivationConfigAware> {
     private val dateFormat: String = "dd-MM-yyyy hh:mm"
     private val simpleDateFormat = SimpleDateFormat(dateFormat)
     private val mapper: ObjectMapper = jacksonObjectMapper().setDateFormat(simpleDateFormat)
 
+    private lateinit var repository: ActivationConfigRepository
 
-    override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationFactory {
+    override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationConfigAware {
         this.repository = repository
         return this
     }
 
-    override fun withConfiguration(configuration: String): BaseActivation<*> {
+    override fun setConfiguration(configuration: String): BaseActivation<*> {
         val operation = mapper.readValue<NoviOperation>(configuration)
         val optional1 = repository.findById(operation.activationIds[0])
         val op1 = if (optional1.isPresent) {
             val activation = optional1.get()
             val clazz = Class.forName(activation.name).kotlin
-            val factory = REGISTRY.instance[clazz] as ActivationFactory
-            factory.withConfiguration(activation.config)
+            val factory = REGISTRY.instance[clazz] as ActivationConfigAware
+            factory.setConfiguration(activation.config)
         } else NoOpActivation()
         when (op ?: operation.operation) {
             "AND" -> {
@@ -37,8 +39,8 @@ class NoviOperationActivationFactory(val op: String? = null) : ActivationFactory
                 val op2 = if (optional2.isPresent) {
                     val activation = optional2.get()
                     val clazz = Class.forName(activation.name).kotlin
-                    val factory = REGISTRY.instance[clazz] as ActivationFactory
-                    factory.withConfiguration(activation.config)
+                    val factory = REGISTRY.instance[clazz] as ActivationConfigAware
+                    factory.setConfiguration(activation.config)
                 } else NoOpActivation()
                 return AndActivation(op1, op2)
             }
@@ -48,8 +50,8 @@ class NoviOperationActivationFactory(val op: String? = null) : ActivationFactory
                 val op2 = if (optional2.isPresent) {
                     val activation = optional2.get()
                     val clazz = Class.forName(activation.name).kotlin
-                    val factory = REGISTRY.instance[clazz] as ActivationFactory
-                    factory.withConfiguration(activation.config)
+                    val factory = REGISTRY.instance[clazz] as ActivationConfigAware
+                    factory.setConfiguration(activation.config)
                 } else NoOpActivation()
                 return OrActivation(op1, op2)
             }

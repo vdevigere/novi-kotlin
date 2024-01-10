@@ -15,7 +15,8 @@ class WeightedRandomActivationTest {
                 "SampleC":25.0
                 }
                 """
-        val wra = WeightedRandomActivation(configStr = config)
+        val wra: WeightedRandomActivation =
+            WeightedRandomActivation().setConfiguration(configuration = config) as WeightedRandomActivation
         assertThat(wra.parsedConfig).contains(
             Pair.create("SampleA", 50.0),
             Pair.create("SampleB", 25.0),
@@ -42,7 +43,7 @@ class WeightedRandomActivationTest {
                     }
                 }
                 """
-        val wra = WeightedRandomActivation(configStr = config)
+        val wra = WeightedRandomActivation().setConfiguration(config)
         assertThat(wra.evaluate(context)).isTrue
     }
 
@@ -65,7 +66,7 @@ class WeightedRandomActivationTest {
                     }
                 }
                 """
-        val wra = WeightedRandomActivation(configStr = config)
+        val wra = WeightedRandomActivation().setConfiguration(configuration = config)
         assertThat(wra.evaluate(context)).isFalse
     }
 }

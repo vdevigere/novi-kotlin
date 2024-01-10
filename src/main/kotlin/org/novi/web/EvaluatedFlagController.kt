@@ -26,7 +26,7 @@ class EvaluatedFlagController(
                 (factory as ActivationConfigRepositoryAware<*>).setActivationConfigRepository(activationConfigRepository)
             }
             resultingStatus =
-                resultingStatus && factory?.withConfiguration(activationConfigs.config)?.evaluate(context) ?: false
+                resultingStatus && factory?.setConfiguration(activationConfigs.config)?.evaluate(context) ?: false
         }
         flag.status = resultingStatus
         return flag

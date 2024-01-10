@@ -1,31 +1,29 @@
 package org.novi.persistence
 
-import org.novi.core.AndActivation
-import org.novi.core.NoArg
-import org.novi.core.NotActivation
-import org.novi.core.OrActivation
+import org.novi.core.*
 import org.novi.exceptions.ConfigStringNotFoundException
 import org.novi.exceptions.IdNotFoundException
 
 @NoArg
 abstract class BaseActivation<T : Any>(
     private var id: Long? = null,
-    configStr: String? = null
-) : ActivationConfigRepositoryAware<BaseActivation<T>>(){
+) : ActivationConfigRepositoryAware<BaseActivation<T>>, ActivationConfigAware {
 
-    private var configuration: String? = configStr
-        get() = field ?: run {
-            val optional = repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
-            if (optional.isPresent) {
-                return optional.get().config
+
+    private lateinit var repository: ActivationConfigRepository
+    private lateinit var configuration: String
+
+    val parsedConfig: T
+        get() {
+            if (!this::configuration.isInitialized) {
+                val optional = repository.findById(id ?: throw IdNotFoundException("Id has not been set"))
+                if (optional.isPresent) {
+                    this.configuration = optional.get().config
+                }
             }
-            throw IdNotFoundException("$id was not found in the database")
+            return valueOf(configuration)
         }
 
-    val parsedConfig: T by lazy {
-        configuration?.let { valueOf(it) }
-            ?: throw ConfigStringNotFoundException("configuration is null or has not been set")
-    }
 
     abstract fun valueOf(s: String): T
 
@@ -41,4 +39,8 @@ abstract class BaseActivation<T : Any>(
     infix fun or(that: BaseActivation<*>): BaseActivation<String> = OrActivation(this, that)
 
     operator fun not(): BaseActivation<String> = NotActivation(this)
+    override fun setConfiguration(configuration: String): BaseActivation<*> {
+        this.configuration = configuration
+        return this
+    }
 }

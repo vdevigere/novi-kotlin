@@ -1,6 +1,6 @@
 package org.novi
 
-import org.novi.core.ActivationFactory
+import org.novi.core.ActivationConfigAware
 import org.springframework.context.annotation.Configuration
 import java.util.*
 import kotlin.reflect.KClass
@@ -13,7 +13,7 @@ class NoviConfiguration() {
     }
 
     private final fun registerPlugins() {
-        val loader = ServiceLoader.load(ActivationFactory::class.java)
+        val loader = ServiceLoader.load(ActivationConfigAware::class.java)
         for (factory in loader) {
             REGISTRY.instance[factory::class] = factory
         }
@@ -21,5 +21,5 @@ class NoviConfiguration() {
 }
 
 object REGISTRY {
-    val instance = HashMap<KClass<out ActivationFactory>, ActivationFactory>()
+    val instance = HashMap<KClass<out ActivationConfigAware>, ActivationConfigAware>()
 }

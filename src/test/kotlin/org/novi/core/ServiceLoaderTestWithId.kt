@@ -31,13 +31,13 @@ class ServiceLoaderTestWithId {
 
     @Test
     fun testServiceLoaderFactory() {
-        val loader = ServiceLoader.load(ActivationFactory::class.java)
+        val loader = ServiceLoader.load(ActivationConfigAware::class.java)
         Assertions.assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivationFactory::class.java)
         Assertions.assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivationFactory::class.java)
         for (factory in loader) {
             when (factory) {
                 is DateTimeActivationFactory -> {
-                    val dta: DateTimeActivation = factory.withConfiguration(dtaConfig) as DateTimeActivation
+                    val dta: DateTimeActivation = factory.setConfiguration(dtaConfig) as DateTimeActivation
                     val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
                     val mapper = jacksonObjectMapper().setDateFormat(sdf)
                     val drd = mapper.readValue<DateRangeData>(dtaConfig)
@@ -46,7 +46,7 @@ class ServiceLoaderTestWithId {
 
                 is WeightedRandomActivationFactory -> {
 //                    Assertions.assertThat(activation.configuration).isNull()
-                    val newInstance = factory.withConfiguration(wrConfig.trimIndent())
+                    val newInstance = factory.setConfiguration(wrConfig.trimIndent())
                     Assertions.assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
                 }
             }

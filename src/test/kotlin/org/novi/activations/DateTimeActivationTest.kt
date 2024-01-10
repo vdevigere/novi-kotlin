@@ -7,8 +7,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateInBetween() {
-        val dta = DateTimeActivation(
-            configStr =
+        val dta = DateTimeActivation().setConfiguration(
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -28,8 +27,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateEqStartDate() {
-        val dta = DateTimeActivation(
-            configStr =
+        val dta = DateTimeActivation().setConfiguration(
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -49,8 +47,7 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateEqEndDate() {
-        val dta = DateTimeActivation(
-            configStr =
+        val dta = DateTimeActivation().setConfiguration(
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -70,8 +67,8 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateGtEndDate() {
-        val dta = DateTimeActivation(
-            configStr =
+        val dta = DateTimeActivation().setConfiguration(
+            configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",
@@ -91,8 +88,8 @@ class DateTimeActivationTest {
 
     @Test
     fun evaluateForDateLtStartDate() {
-        val dta = DateTimeActivation(
-            configStr =
+        val dta = DateTimeActivation().setConfiguration(
+            configuration =
             """
                 {
                     "startDateTime":"11-12-2023 12:00",

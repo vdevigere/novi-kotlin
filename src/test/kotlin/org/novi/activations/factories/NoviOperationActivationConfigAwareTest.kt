@@ -11,7 +11,7 @@ import org.novi.persistence.ActivationConfig
 import org.novi.persistence.ActivationConfigRepository
 import java.util.*
 
-class NoviOperationActivationFactoryTest {
+class NoviOperationActivationConfigAwareTest {
 
     @Test
     fun testAnd() {
@@ -45,7 +45,7 @@ class NoviOperationActivationFactoryTest {
             {"activationIds":[1,2],"operation":"AND"}
         """.trimIndent()
         val factory = NoviOperationActivationFactory()
-        val activation = factory.setActivationConfigRepository(mockRepo).withConfiguration(config)
+        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(config)
         assertThat(activation.evaluate(context)).isFalse
     }
 
@@ -81,7 +81,7 @@ class NoviOperationActivationFactoryTest {
             {"activationIds":[1,2],"operation":"OR"}
         """.trimIndent()
         val factory = NoviOperationActivationFactory()
-        val activation = factory.setActivationConfigRepository(mockRepo).withConfiguration(config)
+        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(config)
         assertThat(activation.evaluate(context)).isTrue
     }
 
@@ -106,7 +106,7 @@ class NoviOperationActivationFactoryTest {
             {"activationIds":[1],"operation":"NOT"}
         """.trimIndent()
         val factory = NoviOperationActivationFactory()
-        val activation = factory.setActivationConfigRepository(mockRepo).withConfiguration(config)
+        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(config)
         assertThat(activation.evaluate(context)).isFalse
     }
 
@@ -139,7 +139,7 @@ class NoviOperationActivationFactoryTest {
                 }
                 """
         val factory = AndActivationFactory()
-        val activation = factory.setActivationConfigRepository(mockRepo).withConfiguration(
+        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(
             """
             {
                 "activationIds":[1,2]

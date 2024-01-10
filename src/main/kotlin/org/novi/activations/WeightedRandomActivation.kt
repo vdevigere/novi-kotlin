@@ -6,14 +6,13 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.apache.commons.math3.distribution.EnumeratedDistribution
 import org.apache.commons.math3.random.JDKRandomGenerator
 import org.apache.commons.math3.util.Pair
-import org.novi.core.ActivationFactory
+import org.novi.core.ActivationConfigAware
 import org.novi.persistence.BaseActivation
 
 class WeightedRandomActivation(
-    id: Long? = null,
-    configStr: String? = null
+    id: Long? = null
 ) :
-    BaseActivation<List<Pair<String, Double>>>(id, configStr) {
+    BaseActivation<List<Pair<String, Double>>>(id) {
 
     override fun valueOf(s: String): List<Pair<String, Double>> {
         val mapper = jacksonObjectMapper()
@@ -34,7 +33,7 @@ class WeightedRandomActivation(
     }
 }
 
-class WeightedRandomActivationFactory : ActivationFactory {
-    override fun withConfiguration(configuration: String): BaseActivation<*> =
-        WeightedRandomActivation(configStr = configuration)
+class WeightedRandomActivationFactory : ActivationConfigAware {
+    override fun setConfiguration(configuration: String): BaseActivation<*> =
+        WeightedRandomActivation().setConfiguration(configuration)
 }

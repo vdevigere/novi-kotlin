@@ -9,17 +9,20 @@ class DslTest {
 
     @Test
     fun testEvaluate2() {
-        val bEval = FalseActivation(configStr = "False-1") and FalseActivation(configStr = "False-2") or TrueActivation(
-            configStr = "True-3"
-        )
+        val bEval =
+            FalseActivation().setConfiguration(configuration = "False-1") and FalseActivation().setConfiguration(configuration = "False-2") or TrueActivation().setConfiguration(
+                configuration = "True-3"
+            )
         assertThat(bEval.evaluate("World")).isTrue()
     }
 
     @Test
     fun testEvaluate3() {
         val bEval =
-            FalseActivation(configStr = "False-1") and (FalseActivation(configStr = "False-2") or TrueActivation(
-                configStr = "True-3"
+            FalseActivation().setConfiguration(configuration = "False-1") and (FalseActivation().setConfiguration(
+                configuration = "False-2"
+            ) or TrueActivation().setConfiguration(
+                configuration = "True-3"
             ))
         assertThat(bEval.evaluate("World")).isFalse()
     }
@@ -27,8 +30,10 @@ class DslTest {
     @Test
     fun testEvaluate4() {
         val bEval =
-            !FalseActivation(configStr = "False-1") and (FalseActivation(configStr = "False-2") or TrueActivation(
-                configStr = "True-3"
+            !FalseActivation().setConfiguration(configuration = "False-1") and (FalseActivation().setConfiguration(
+                configuration = "False-2"
+            ) or TrueActivation().setConfiguration(
+                configuration = "True-3"
             ))
         assertThat(bEval.evaluate("World")).isTrue()
     }
@@ -46,7 +51,8 @@ class DslTest {
                     "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00"
                 }
                 """
-        val bEval = DateTimeActivation(configStr = config) and TrueActivation(configStr = "True-1")
+        val bEval =
+            DateTimeActivation().setConfiguration(configuration = config) and TrueActivation().setConfiguration(configuration = "True-1")
         assertThat(bEval.evaluate(context)).isTrue
     }
 
@@ -64,8 +70,8 @@ class DslTest {
                 }
                 """
         val bEval2 =
-            DateTimeActivation(configStr = configAltformat, dateFormat = "MM/dd/yyyy hh:mm") and FalseActivation(
-                configStr = "False-1"
+            DateTimeActivation(dateFormat = "MM/dd/yyyy hh:mm").setConfiguration(configuration = configAltformat) and FalseActivation().setConfiguration(
+                configuration = "False-1"
             )
         assertThat(bEval2.evaluate(contextAltFormat)).isFalse
     }
