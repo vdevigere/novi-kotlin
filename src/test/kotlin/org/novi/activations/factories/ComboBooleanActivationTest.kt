@@ -1,12 +1,11 @@
 package org.novi.activations.factories
 
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.novi.NoviConfiguration
+import org.novi.activations.ComboBooleanActivationFactory
 import org.novi.persistence.ActivationConfig
 import org.novi.persistence.ActivationConfigRepository
 import java.util.*
@@ -111,6 +110,7 @@ class ComboBooleanActivationTest {
         val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(config)
         Assertions.assertThat(activation.evaluate(context)).isFalse
     }
+
     companion object {
         @JvmStatic
         @BeforeAll

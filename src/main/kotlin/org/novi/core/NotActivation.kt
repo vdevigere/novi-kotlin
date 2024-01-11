@@ -1,6 +1,5 @@
 package org.novi.core
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.novi.REGISTRY
 import org.novi.exceptions.IdNotFoundException
 import org.novi.persistence.ActivationConfigRepository
@@ -11,7 +10,7 @@ import kotlin.jvm.optionals.getOrElse
 class NotActivation(
     id: Long? = null,
     configString: String? = null,
-    dataValue: BaseActivation<*>?=null
+    dataValue: BaseActivation<*>? = null
 ) : BaseActivation<BaseActivation<*>>(id, configString, dataValue) {
     override fun valueOf(s: String): BaseActivation<*> {
         val id = s.toLong()
@@ -19,9 +18,10 @@ class NotActivation(
         val found = repository.findById(id).getOrElse { throw IdNotFoundException("$id not found in Db") }
         val clazz = Class.forName(found.name).kotlin
         val factory = REGISTRY.instance[clazz]
-        val ba = factory?.setConfiguration(found.config)?:throw UnsupportedOperationException("$clazz not registered")
+        val ba = factory?.setConfiguration(found.config) ?: throw UnsupportedOperationException("$clazz not registered")
         return ba
     }
+
     override fun setActivationConfigRepository(repository: ActivationConfigRepository): BaseActivation<BaseActivation<*>> {
         this.repository = repository
         parsedConfig!!.setActivationConfigRepository(repository)
@@ -30,7 +30,7 @@ class NotActivation(
 
     override fun evaluate(context: String): Boolean = !parsedConfig!!.evaluate(context)
 
-    companion object: ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware>{
+    companion object : ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
         private lateinit var repository: ActivationConfigRepository
 
         override fun setConfiguration(configuration: String): BaseActivation<*> =
@@ -43,4 +43,5 @@ class NotActivation(
     }
 }
 
-class NotActivationFactory : ActivationConfigAware by NotActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by NotActivation.Companion
+class NotActivationFactory : ActivationConfigAware by NotActivation.Companion,
+    ActivationConfigRepositoryAware<ActivationConfigAware> by NotActivation.Companion

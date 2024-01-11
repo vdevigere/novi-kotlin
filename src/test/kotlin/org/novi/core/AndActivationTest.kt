@@ -1,10 +1,8 @@
 package org.novi.core
 
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.novi.NoviConfiguration
 import org.novi.persistence.ActivationConfig
@@ -45,6 +43,7 @@ class AndActivationTest {
         val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration("[1,2]")
         Assertions.assertThat(activation.evaluate(context)).isFalse
     }
+
     companion object {
         @JvmStatic
         @BeforeAll

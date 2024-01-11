@@ -38,7 +38,7 @@ class AndActivation(
     }
 
     override fun evaluate(context: String): Boolean {
-        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce{acc, next ->
+        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce { acc, next ->
             val result = acc && next
             logger.debug("$acc && $next = $result")
             result
@@ -60,4 +60,5 @@ class AndActivation(
     }
 }
 
-class AndActivationFactory : ActivationConfigAware by AndActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by AndActivation.Companion
+class AndActivationFactory : ActivationConfigAware by AndActivation.Companion,
+    ActivationConfigRepositoryAware<ActivationConfigAware> by AndActivation.Companion

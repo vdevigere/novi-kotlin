@@ -1,5 +1,4 @@
 #Include only factories here as we want a new instance each time
 org.novi.activations.DateTimeActivationFactory
 org.novi.activations.WeightedRandomActivationFactory
-org.novi.activations.factories.NoviOperationActivationFactory
 org.novi.core.AndActivationFactory

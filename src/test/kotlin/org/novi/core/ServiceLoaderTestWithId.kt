@@ -32,7 +32,6 @@ class ServiceLoaderTestWithId {
         val loader = ServiceLoader.load(ActivationConfigAware::class.java)
         assertThat(loader).hasAtLeastOneElementOfType(DateTimeActivationFactory::class.java)
         assertThat(loader).hasAtLeastOneElementOfType(WeightedRandomActivationFactory::class.java)
-        assertThat(loader).hasAtLeastOneElementOfType(NoOpActivationFactory::class.java)
         for (factory in loader) {
             when (factory) {
                 is DateTimeActivationFactory -> {
@@ -46,11 +45,6 @@ class ServiceLoaderTestWithId {
                 is WeightedRandomActivationFactory -> {
                     val newInstance = factory.setConfiguration(wrConfig.trimIndent())
                     assertThat(newInstance.parsedConfig).isEqualTo(newInstance.valueOf(wrConfig))
-                }
-
-                is NoOpActivationFactory -> {
-                    val newInstance = factory.setConfiguration("Config-In")
-                    assertThat(newInstance.parsedConfig).isEqualTo("Config-In")
                 }
             }
 

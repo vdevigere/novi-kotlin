@@ -27,7 +27,7 @@ class EvaluatedFlagController(
             if (factory is ActivationConfigRepositoryAware<*>) {
                 (factory as ActivationConfigRepositoryAware<*>).setActivationConfigRepository(activationConfigRepository)
             }
-            val result =factory?.setConfiguration(it.config)?.evaluate(context) ?: false
+            val result = factory?.setConfiguration(it.config)?.evaluate(context) ?: false
             logger.debug("Result of ${it.name} is $result")
             result
         }.reduce { acc, next ->

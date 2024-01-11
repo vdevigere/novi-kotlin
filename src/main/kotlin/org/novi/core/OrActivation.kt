@@ -23,7 +23,7 @@ class OrActivation(
         return this
     }
 
-    override fun valueOf(s: String): Array<BaseActivation<*>>{
+    override fun valueOf(s: String): Array<BaseActivation<*>> {
         val retVal = ArrayList<BaseActivation<*>>()
         //1. Parse s into an array of ids
         val ids = mapper.readValue<Array<Long>>(s)
@@ -37,8 +37,9 @@ class OrActivation(
         }
         return retVal.toTypedArray()
     }
+
     override fun evaluate(context: String): Boolean {
-        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce{acc, next ->
+        val retValue = parsedConfig!!.map { ba -> ba.evaluate(context) }.reduce { acc, next ->
             val result = acc || next
             logger.debug("$acc || $next = $result")
             result
@@ -46,7 +47,7 @@ class OrActivation(
         return retValue
     }
 
-    companion object: ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware>{
+    companion object : ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
         val mapper = jacksonObjectMapper();
         private lateinit var repository: ActivationConfigRepository
 
@@ -60,4 +61,5 @@ class OrActivation(
     }
 }
 
-class OrActivationFactory : ActivationConfigAware by OrActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by OrActivation.Companion
+class OrActivationFactory : ActivationConfigAware by OrActivation.Companion,
+    ActivationConfigRepositoryAware<ActivationConfigAware> by OrActivation.Companion

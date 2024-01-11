@@ -1,4 +1,4 @@
-package org.novi.activations.factories
+package org.novi.activations
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -9,31 +9,32 @@ import org.novi.persistence.ActivationConfigRepositoryAware
 import org.novi.persistence.BaseActivation
 import java.text.SimpleDateFormat
 
-class ComboBooleanActivation(id: Long?=null, configString: String?=null): BaseActivation<NoviOperation>(id, configString) {
+class ComboBooleanActivation(id: Long? = null, configString: String? = null) :
+    BaseActivation<NoviOperation>(id, configString) {
     override fun valueOf(s: String): NoviOperation {
         return mapper.readValue<NoviOperation>(s)
     }
 
     override fun evaluate(context: String): Boolean {
-        val ac = when(val operation = parsedConfig!!.operation){
-            "AND"->{
+        val ac = when (val operation = parsedConfig!!.operation) {
+            "AND" -> {
                 AndActivation(configString = mapper.writeValueAsString(parsedConfig!!.activationIds))
             }
 
-            "OR"-> {
+            "OR" -> {
                 OrActivation(configString = mapper.writeValueAsString(parsedConfig!!.activationIds))
             }
 
-            "NOT"->{
+            "NOT" -> {
                 //Select the first one.
                 NotActivation(configString = parsedConfig!!.activationIds[0].toString())
             }
 
-            else ->{
+            else -> {
                 throw IllegalArgumentException("Unknown operation: $operation")
             }
         }
-        return  ac.setActivationConfigRepository(repository).evaluate(context)
+        return ac.setActivationConfigRepository(repository).evaluate(context)
     }
 
     companion object : ActivationConfigAware, ActivationConfigRepositoryAware<ActivationConfigAware> {
@@ -48,10 +49,11 @@ class ComboBooleanActivation(id: Long?=null, configString: String?=null): BaseAc
 
 
         override fun setActivationConfigRepository(repository: ActivationConfigRepository): ActivationConfigAware {
-            this.repository = repository
+            Companion.repository = repository
             return this
         }
     }
 }
 
-class ComboBooleanActivationFactory : ActivationConfigAware by ComboBooleanActivation.Companion, ActivationConfigRepositoryAware<ActivationConfigAware> by ComboBooleanActivation.Companion
+class ComboBooleanActivationFactory : ActivationConfigAware by ComboBooleanActivation,
+    ActivationConfigRepositoryAware<ActivationConfigAware> by ComboBooleanActivation
