@@ -5,4 +5,5 @@ org.novi.activations.factories.NoviOperationActivationFactory
 org.novi.activations.factories.ComboBooleanActivationFactory
 org.novi.core.AndActivationFactory
 org.novi.core.OrActivationFactory
+org.novi.core.NotActivationFactory
 org.novi.activations.NoOpActivationFactory

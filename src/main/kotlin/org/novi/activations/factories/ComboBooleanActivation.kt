@@ -25,8 +25,10 @@ class ComboBooleanActivation(id: Long?=null, configString: String?=null): BaseAc
             }
 
             "NOT"->{
-                throw UnsupportedOperationException("Not not yet supported")
+                //Select the first one.
+                NotActivation(configString = parsedConfig!!.activationIds[0].toString())
             }
+
             else ->{
                 throw IllegalArgumentException("Unknown operation: $operation")
             }

@@ -47,5 +47,5 @@ abstract class BaseActivation<T : Any>(
 
     infix fun or(that: BaseActivation<*>): BaseActivation<*> = OrActivation(dataValue = arrayOf(this, that))
 
-    operator fun not(): BaseActivation<String> = NotActivation(this)
+    operator fun not(): BaseActivation<*> = NotActivation(dataValue = this)
 }

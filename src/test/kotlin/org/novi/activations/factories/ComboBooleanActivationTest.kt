@@ -87,6 +87,30 @@ class ComboBooleanActivationTest {
         Assertions.assertThat(activation.evaluate(context)).isTrue
     }
 
+    @Test
+    fun testNot() {
+        val op1config = ActivationConfig(
+            config = "{\"startDateTime\":\"11-12-2023 12:00\",\"endDateTime\":\"20-12-2023 12:00\" }",
+            description = "Date Time",
+            name = "org.novi.activations.DateTimeActivationFactory",
+            id = 1L
+        )
+
+        val mockRepo = Mockito.mock(ActivationConfigRepository::class.java)
+        Mockito.`when`(mockRepo.findById(1L)).thenReturn(Optional.of(op1config))
+
+        val context = """
+                {
+                    "org.novi.activations.DateTimeActivation.currentDateTime": "15-12-2023 12:00"             
+                }
+                """
+        val config = """
+            {"activationIds":[1],"operation":"NOT"}
+        """.trimIndent()
+        val factory = ComboBooleanActivationFactory()
+        val activation = factory.setActivationConfigRepository(mockRepo).setConfiguration(config)
+        Assertions.assertThat(activation.evaluate(context)).isFalse
+    }
     companion object {
         @JvmStatic
         @BeforeAll

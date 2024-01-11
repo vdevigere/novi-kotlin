@@ -57,7 +57,7 @@ class NoviOperationActivationFactory(val op: String? = null) : ActivationConfigA
             }
 
             "NOT" -> {
-                return NotActivation(op1)
+                return NotActivation(dataValue = op1)
             }
         }
         return NoOpActivation()
