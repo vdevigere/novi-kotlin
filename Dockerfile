@@ -1,6 +1,5 @@
 FROM eclipse-temurin:21-jdk-alpine as builder
 WORKDIR /workspace/novi-kotlin
-COPY .gradle .gradle
 COPY gradle gradle
 COPY gradlew .
 COPY src src
