@@ -5,7 +5,7 @@ COPY gradlew .
 COPY src src
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
-RUN ./gradlew build -x test
+RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon -i  clean build
 
 FROM eclipse-temurin:21-jre-alpine
 ARG APP_WEB_TARGET=/workspace/novi-kotlin/build
