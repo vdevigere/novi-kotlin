@@ -30,6 +30,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     implementation("org.apache.commons:commons-math3:3.6.1")
+    implementation("commons-cli:commons-cli:1.6.0")
 }
 
 tasks.withType<KotlinCompile> {
