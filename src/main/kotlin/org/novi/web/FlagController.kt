@@ -4,6 +4,7 @@ import org.novi.persistence.Flag
 import org.novi.persistence.FlagRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,5 +16,10 @@ class FlagController(@Autowired val flagRepository: FlagRepository) {
     fun getAllFlags(): Iterable<Flag> {
         val retVal = flagRepository.findAll()
         return retVal
+    }
+
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Long): Flag {
+        return flagRepository.getReferenceById(id)
     }
 }

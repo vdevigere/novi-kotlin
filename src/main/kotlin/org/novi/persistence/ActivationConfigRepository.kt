@@ -1,5 +1,5 @@
 package org.novi.persistence
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface ActivationConfigRepository : CrudRepository<ActivationConfig, Long>
+interface ActivationConfigRepository : JpaRepository<ActivationConfig, Long>

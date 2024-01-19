@@ -23,12 +23,15 @@ class NoviConfiguration(@Value("\${activations.plugin.dir}") final val plugin_di
 
     private final fun registerPlugins(urls: Array<URL>?) {
         var loader = ServiceLoader.load(ActivationConfigAware::class.java)
-        if(urls!=null){
-            loader = ServiceLoader.load(ActivationConfigAware::class.java, URLClassLoader.newInstance(urls, NoviConfiguration::class.java.classLoader))
+        if (urls != null) {
+            loader = ServiceLoader.load(
+                ActivationConfigAware::class.java,
+                URLClassLoader.newInstance(urls, NoviConfiguration::class.java.classLoader)
+            )
         }
         for (factory in loader) {
-                REGISTRY.instance[factory::class] = factory
-            }
+            REGISTRY.instance[factory::class] = factory
+        }
     }
 }
 

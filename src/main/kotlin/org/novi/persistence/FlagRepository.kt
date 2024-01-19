@@ -1,5 +1,5 @@
 package org.novi.persistence
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface FlagRepository : CrudRepository<Flag, Long>
+interface FlagRepository : JpaRepository<Flag, Long>
