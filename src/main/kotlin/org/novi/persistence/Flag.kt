@@ -9,13 +9,13 @@ import kotlin.jvm.Transient
 data class Flag(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long?,
+    var id: Long? = null,
 
     @Column(unique = true)
     val name: String,
 
     @Transient
-    var status: Boolean,
+    var status: Boolean = false,
 
     @ManyToMany(cascade = [CascadeType.ALL])
     val activationConfigs: Set<ActivationConfig>

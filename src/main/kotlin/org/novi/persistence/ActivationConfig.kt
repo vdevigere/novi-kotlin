@@ -7,7 +7,7 @@ import jakarta.persistence.*
 data class ActivationConfig(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long?,
+    var id: Long? = null,
 
     @Column
     val name: String,
